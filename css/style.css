@@ -1,3 +1,28 @@
+body {
+	overflow-x: hidden;
+}
+
+::-webkit-scrollbar-track
+{
+	background-color: #EFEFEF;
+}
+
+::-webkit-scrollbar
+{
+	width: 10px;
+	background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb
+{
+	background-color: #BCBCBC;
+}
+
+::-webkit-scrollbar-thumb:hover
+{
+	background-color: #8e8e8e;
+}
+
 .header {
 	background-color: #8F1E00;
 	position: fixed;
@@ -7,7 +32,7 @@
 .menu {
 	width: 100%;
 	position: fixed;
-	margin-top:60px;
+	margin-top:50px;
 	padding-left:30px;
 	padding-top: 10px;
 	padding-right: 30px;
@@ -35,15 +60,9 @@
 }
 
 #archiveStatus {
-	margin-top: 140px;
+	margin-top: 120px;
 	font-size: 85%;
 	text-align: center;
-}
-
-#topics-link {
-	font-size:80%;
-	position: absolute;
-	left: 0px;
 }
 
 #tags {
@@ -55,9 +74,6 @@
 	padding-right: 20px;
 }
 
-#content {
-	margin-top:20px;
-}
 
 #search {
 	background: url(../images/searchIcon.png) no-repeat scroll 7px 7px;

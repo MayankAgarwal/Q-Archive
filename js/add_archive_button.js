@@ -1,4 +1,4 @@
-// gets the current logged in user name from Quora API
+﻿// gets the current logged in user name from Quora API
 
 var user = loggedUser();
 
@@ -29,26 +29,26 @@ $('div.main_col').on("mouseleave", "div.answer_wrapper", function() {
 	$(this).children('div.item_action_bar').children('#item_action_bar_archive_link').remove();
 })
 
-/*	=============================================================================================================================================================================================================
- * 
- *CURRENTLY COMMENTED OUT BECAUSE THE LINK IS NOT INJECTED ON NEWLY LOADED CONTENT
- *
+
 // Injecting archive link on the homepage feed.
 
-$('div.feed_item_answer').on("mouseenter", "div.feed_item_answer_content", function() {
+$('div.feed_col').on("mouseenter", "div.feed_item_answer_content", function() {
 	$(this).children('div.item_action_bar').append('<span id="item_action_bar_archive_link"><span class="bullet"> • </span> <span class="archiveLink" style="cursor: pointer">Archive</span></span>');
 	$('.archiveLink').bind('click', function() {
 		archiveClick($(this).parent());
 	});
 })
 
+
 // Removing archive link from homepage
-$('div.feed_item_answer').on("mouseleave", "div.feed_item_answer_content", function() {
+
+$('div.feed_col').on("mouseleave", "div.feed_item_answer_content", function() {
 	$(this).children('div.item_action_bar').children('#item_action_bar_archive_link').remove();
 })
 
-* =============================================================================================================================================================================================================
-* */
+// Adding status message div to the page
+$('body').append('<div class="above_page_banner" id="answer_archived_message" style="display:none; background: green; color: white;">Answer archived.</div>');
+$('body').append('<div class="above_page_banner" id="link_present_message" style="display:none">Link already present in the archive.</div>');
 
 
 /* Purpose - extract the link of the answer to archive from the timestamp or answer_permalink field. Pass it on to other function to add it to the archive.
@@ -88,7 +88,7 @@ function addLink(element, link) {
   		userLinks = items[user];
   	
   		if (typeof userLinks != 'undefined' && userLinks.indexOf(link) != -1) {
-  			alert("Link already present in archive.")
+  			$('div#link_present_message').slideDown(300).delay(1500).slideUp(300);
   			return;
   		}
 
@@ -104,7 +104,7 @@ function addLink(element, link) {
   		
   		try {
   			storage.set(userDict, function() {
-  				alert('Answer archived.')
+  				$('div#answer_archived_message').slideDown(300).delay(1500).slideUp(300);
   			})
   		}
   		catch(e) {
@@ -141,6 +141,7 @@ function loggedUser()
 			},
 	 error: function(jqXHR, textStatus, errorThrown)
 	 	{
+	 		console.log(errorThrown)
 	 	},
 	 timeout: 15000
 	});

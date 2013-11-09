@@ -9,15 +9,6 @@ var intervalID = window.setInterval(checkUserLoggedIn, 2000);
 var checkBoxID = 1;
 
 
-/* PURPOSE: Initialize window on document load
- * 			1. Activates the side menu
- */
-
-$(document).ready(function() {
-	$('#topics-link').sidr();
-})
-
-
 /*
  * PURPOSE - Check if the username has been received from the Quora API.
  * 			If not, then display appropriate message. Else, call functions to populate content on the page
@@ -48,7 +39,7 @@ function checkUserLoggedIn(){
  */
 
 function isValidLink (link) {
-	
+
 	if (typeof link != 'string')
 		return false;
 	
@@ -60,8 +51,8 @@ function isValidLink (link) {
 	
 	if (link.charAt(0) != '/')
 		return false;
-	
-	if (link.match(/[^A-Za-z0-9/-]/) != null)
+
+	if (link.match(/[^A-Za-z0-9+/-]/) != null)
 		return false 
 	
 	try {
@@ -161,8 +152,6 @@ function displayLink(link) {
 	
 	link = 'http://quora.com' + link;
 	
-	var savePdfLink = "http://html-pdf-converter.com/en/convert?u=" +link;
-	
 	var div = $('body').find('#' + subject);
 	
 	var html = "";
@@ -170,7 +159,7 @@ function displayLink(link) {
 	if (div.length == 0) {		// if no div for the topic exists
 		
 		html = '<div class="row-fluid"  id="'+subject+'">' +
-					'<div class="span12 subject_header">'+subject_space+'<a href="'+subjectHREF+'" target="_blank" style="margin-left: 10px;" name="'+subject+'"><img src="images/link.png" /></a></div>' +
+					'<div class="span12 subject_header">'+subject_space+'<a href="'+subjectHREF+'" target="_blank" style="margin-left: 20px; font-size:10px;color:black" name="'+subject+'">Topic Page</a><a href="'+(subjectHREF+'/best_questions')+'" target="_blank" style="margin-left: 20px; font-size:10px;color:black">Best Questions</a></div>' +
 					'<div class="span12 answer_link"><input type="checkbox" style="margin-right:10px;" id="chkbox'+checkBoxID+'" value="'+chkboxValue+'"><a href="'+link+'" target="_blank">'+display+'  <span class="hidden_topic">'+subject_space + '</a></span></div>'+
 				'</div>'
 		

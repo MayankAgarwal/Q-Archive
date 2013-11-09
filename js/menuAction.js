@@ -6,6 +6,7 @@ var user = loggedUser();
 
 $('#show-hide-tags').bind("click", function() {
 	$('#tags').toggle();
+	return false;
 })
 
 
@@ -73,7 +74,7 @@ function removeLink(links) {
 		
 		for (var i=0; i<links.length; i++) {
 			userLinks = userLinks.replace(links[i], '');		//	removes the link from the archive
-			userLinks = userLinks.replace(/;;/g, ';');			//	replaces ;; created beacuse of removal of links to ;
+			userLinks = userLinks.replace(/;;/g, ';');			//	replaces ;; created because of removal of links to ;
 		}
 		
 		var userDict = {}		// var created to be able to push the new archive into chrome storage.
@@ -190,7 +191,7 @@ $('#importArchive').bind("click", function() {
 })
 
 
-/* Triggers when clicked on the import button
+/* Triggers when clicked on the import button in the modal box
  * 
  * PURPOSE  - Reads the textarea value for links -> verifies each link to conform to standards -> checks if link is not present in the archive -> adds the link to the archive.
  * Reloads on successful operation.
