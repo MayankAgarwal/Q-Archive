@@ -1,0 +1,39 @@
+{
+	"manifest_version": 2,
+	
+	"name": "Quora Archive",
+	
+	"version": "1.0",
+	
+	"description": "Archive answers on Quora",
+
+	"icons": {"48": "icons/icon48.png",
+		  "128": "icons/icon128.png"
+	},
+
+	"author": "Mayank Agarwal",
+	
+	"browser_action": {
+	  "default_icon": "icons/icon48.png"  
+	},
+
+	"background": {
+		"scripts": ["js/jquery.js", "js/background.js"]
+	},
+	
+	"permissions": [
+		"*://*.quora.com/", "background", "storage", "tabs"
+	],
+
+	"content_scripts": [
+		{
+			"matches": ["http://www.quora.com/*", "https://www.quora.com/*"],
+			"js": ["js/jquery.js", "js/add_archive_button.js"],
+			"all_frames": true
+		}
+	
+	],
+	
+	"web_accessible_resources": ["/js/jquery-1.10.2.min.map"]
+	
+}

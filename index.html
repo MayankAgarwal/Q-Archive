@@ -1,0 +1,113 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+    <link href="css/bootstrap.min.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="css/style.css" media="screen" rel="stylesheet" type="text/css" />
+    
+    <script src="js/jquery.js" type="text/javascript"></script>  
+    <script src="js/bootstrap.min.js" type="text/javascript"></script>
+      
+    <link rel="shortcut icon" href="icon/favicon.ico" />
+    
+    <title>Quora Archive</title>
+  </head>
+  <body>
+    <div class="row-fluid">
+    	<div class="span12 header">
+    		<a href=""><img src="images/icon.png"></a></img>
+    	</div>
+    </div>
+    
+    <div class="row-fluid menu">
+    	<div class="span2 menu_item" id="removeSelected">
+    		<i class="icon-remove"></i>  Remove Answers
+    	</div>
+    	<div class="span2 menu_item" id="clearArchive">
+    		<i class="icon-refresh"></i>  Clear Archive
+    	</div>
+
+    	<div class="span4">
+    		<input type="text" class="form-control" placeholder="Search Archive" id="search" autofocus="on">
+    	</div>
+    	
+    	<div class="span2 menu_item" id="exportArchive">
+    		<i class="icon-upload"></i>  Export Archive
+    	</div>
+    	<div class="span2 menu_item" id="importArchive">
+    		<i class="icon-download"></i>  Import Archive
+    	</div>
+    </div>
+    
+    	<div class="row-fluid">
+    	<div class="span10 offset1" id="archiveStatus">
+    		<div class="row-fluid">
+    			<div class="span4" id="totalSpace">
+    				
+    			</div>
+    			<div class="span4" id="usedSpace">
+    				
+    			</div>
+    			<div class="span4" id="availableSpace">
+    				
+    			</div>
+    		</div>
+    	</div>
+    </div>
+   
+   
+    <div class="row-fluid">
+    	<div class="span10 offset1">
+    		<span id="show-hide-tags"><a href="#"><small><strong>Show/Hide Topics:</strong></small></a></span>
+    	</div>
+    	<div class="span10 offset1" id="tags">
+    		
+    	</div>
+    </div>
+    	
+    <div class="row-fluid">
+    	<div id="content" class="span10 offset1">
+    		    <div style="text-align:center; margin-top:40px;">
+    		    	<div><img src="images/loader.GIF" /></div>
+    		    	<div>Loading</div>
+    		    </div>		
+    	</div>
+    </div>
+    
+    <div class="row-fluid footer">
+    	<div class="span6 offset1"><strong>
+    		Report bugs or Suggest enhancements: <a href="https://github.com/MayankAgarwal/quora-archive/issues" target="_blank">GitHub - Quora Archive</a>
+    	</strong></div>
+    	<div class="span1">
+    		<strong><a href="about.html">About</a></strong>
+    	</div>
+    </div>
+    
+    
+    <!-- Export and Import archive modal -->
+    
+    <div id="archive_export_import_modal" class="modal hide fade">
+    	<div class="modal-header">
+    		<button type="button" class="close" data-dismiss="modal" aria-hidden"true">&times;</button>
+    		<span id="export_import_archive_header"></span>
+    	</div>
+    	<div class="modal-body">
+    		<p id="body-text"></p>
+    		<div id="export_import_archive_contents"></div>
+    	</div>
+    	<div class="modal-footer">
+    		<a href="#" class="btn" data-dismiss="modal" aria-hidden="true">Close</a>
+    		<span id="button-container"></span>
+    	</div>
+    </div>
+    
+  
+  </body>
+
+	<script src="js/jquery.clippy.min.js" type="text/javascript"></script>
+	<script src="js/Indexscript.js" type="text/javascript"></script>
+	<script src="js/menuAction.js" type="text/javascript"></script>
+	
+  
+</html>
