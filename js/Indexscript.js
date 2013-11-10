@@ -89,6 +89,12 @@ function extractLinkProperties(link) {
 		var len = linkSplit.length;
 		
 		var personName = linkSplit[len-1];
+		
+		if (isNaN(parseInt(personName)) == false)
+			personName = "Anonymous"
+		
+		personName = personName.replace(/[-0-9]/g, ' ');
+		
 		var linkType = linkSplit[len-2];
 		var questionText = linkSplit[len-3];
 		
@@ -145,12 +151,12 @@ function displayLink(link) {
 	var chkboxValue = link;
 	
 	var subject = linkProp[0];
-	var subjectHREF = 'http://quora.com/' + subject;	// link to the primary topic page
+	var subjectHREF = 'http://www.quora.com/' + subject;	// link to the primary topic page
 	var subject_space = subject.replace(/-/g, ' ');
 	
-	var display = linkProp[3].replace(/[-0-9]/g, ' ') + "'s " + linkProp[2].replace(/-/g, ' ') + ' to <strong>' + linkProp[1].replace(/-/g, ' ')+'</strong>';
+	var display = linkProp[3] + "'s " + linkProp[2].replace(/-/g, ' ') + ' to <strong>' + linkProp[1].replace(/-/g, ' ')+'</strong>';
 	
-	link = 'http://quora.com' + link;
+	link = 'http://www.quora.com' + link;
 	
 	var div = $('body').find('#' + subject);
 	

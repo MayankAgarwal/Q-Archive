@@ -135,18 +135,34 @@ $('#search').bind("input", function() {
 		})
 	}
 	else {
+
+		searchKey = searchKey.split(',')		// gets multiple search terms in an array
+
+		var existsFlag;		// flag =1 if any of the searchKey found in div contents
+
 		$('#content div').each(function() {
 			
 			// get text content of each div under content div
 			var topicContent = this.textContent;
-			
-			// if the text content does not contain the search string, then hide the current div otherwise show it.
-			if (topicContent.toLowerCase().indexOf(searchKey.toLowerCase()) == -1) {
-				$(this).hide();
+			existsFlag = 0;
+
+			for (i=0; i<searchKey.length; i++) {		// go over all the search terms. If even one searchKey matches, display the div. Else hide it
+
+				var query = searchKey[i].trim().toLowerCase();
+
+				// if the text content does not contain the search string, then hide the current div otherwise show it.
+				if (topicContent.toLowerCase().indexOf(query) != -1) {
+					existsFlag=1;
+					break;
+				}
+
 			}
-			else {
+
+			if (existsFlag == 1)
 				$(this).show();
-			}
+			else
+				$(this).hide();
+
 		})
 	}
 })
