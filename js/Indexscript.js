@@ -45,6 +45,12 @@ function isValidLink (link) {
 	
 	if (link.length == 0)
 		return false;
+		
+	// link is that of a post which is either of the format "http://startuplife.quora.com/15-Reasons-Why-Start-ups-are-ing-Hard" or 	"/Michael-Thomas-37/Posts/The-Paradox-of-Productivity"
+	// this checks for links of the first type.
+	if ( link.match(/http:\/\/.+quora.com\/.+/)!=null)	
+		return true;
+	
 	
 	// link is structure as http://www.quora.com <link>
 	// Hence, the first character of the passed argument should be '/'
@@ -130,7 +136,11 @@ function contentPopulate() {
   		for (var i=0; i<userLinks.length; i++) {
   			
   			if (isValidLink(userLinks[i])){
-  				displayLink(userLinks[i])
+  				
+  				if ( userLinks[i].match(/http:\/\/.+quora.com\/.+/)!=null || userLinks[i].indexOf('answer')==-1)		// if the link is that of a post
+  					displayBlogLink(userLinks[i])
+  				else
+  					displayAnswerLink(userLinks[i])
   			}
   		}
 	
@@ -144,7 +154,7 @@ function contentPopulate() {
  * OUTPUT - none
  */
 
-function displayLink(link) {
+function displayAnswerLink(link) {
 	
 	var linkProp = extractLinkProperties(link);
 	
@@ -166,6 +176,67 @@ function displayLink(link) {
 		
 		html = '<div class="row-fluid"  id="'+subject+'">' +
 					'<div class="span12 subject_header">'+subject_space+'<a href="'+subjectHREF+'" target="_blank" style="margin-left: 20px; font-size:10px;color:black" name="'+subject+'">Topic Page</a><a href="'+(subjectHREF+'/best_questions')+'" target="_blank" style="margin-left: 20px; font-size:10px;color:black">Best Questions</a></div>' +
+					'<div class="span12 answer_link"><input type="checkbox" style="margin-right:10px;" id="chkbox'+checkBoxID+'" value="'+chkboxValue+'"><a href="'+link+'" target="_blank">'+display+'  <span class="hidden_topic">'+subject_space + '</a></span></div>'+
+				'</div>'
+		
+		checkBoxID += 1;
+		
+		$('#content').prepend(html);
+		
+		$('#tags').append('<span><a href="#'+subject+'">'+subject_space+'</a></span>')
+		
+	}
+	
+	else {	// append to the existing topic div
+		
+		html = '<div class="span12 answer_link"><input type="checkbox" style="margin-right:10px;" id="chkbox'+checkBoxID+'" value="'+chkboxValue+'"><a href="'+link+'" target="_blank">'+display+'  <span class="hidden_topic">'+subject_space + '</a></span></div>';
+		checkBoxID += 1;
+		
+		$('#'+subject).append(html)
+	}
+	
+	
+}
+
+
+/*
+ * PURPOSE - Displays a link to a Post or Blog in the appropriate region on the index page. This is a separate function because the structure of a url to a blog is different from that of an answer.
+ * INPUT - link (string)
+ * OUTPUT - none
+ */
+
+
+function displayBlogLink(link) {
+	
+	var linkDisplay = link.substring(link.lastIndexOf('/')+1)
+	linkDisplay = linkDisplay.replace(/-/g, ' ')
+	
+	var chkboxValue = link;
+	
+	var subject = "Blogs-and-Posts";
+
+	var subject_space = subject.replace(/-/g, ' ');
+	
+	var display = '<strong>'+linkDisplay+'</strong>';
+
+
+	/* post links are of 2 types. 
+	// 1. http://startuplife.quora.com/15-Reasons-Why-Start-ups-are-ing-Hard
+	// 2. /Michael-Thomas-37/Posts/The-Paradox-of-Productivity
+	This is to add domain name to the 2ns category links
+	*/
+	
+	if (link.charAt(0) == '/')
+		link = 'http://www.quora.com' + link;
+	
+	var div = $('body').find('#' + subject);
+	
+	var html = "";
+	
+	if (div.length == 0) {		// if no div for the topic exists
+		
+		html = '<div class="row-fluid"  id="'+subject+'">' +
+					'<div class="span12 subject_header">'+subject_space+'</div>' +
 					'<div class="span12 answer_link"><input type="checkbox" style="margin-right:10px;" id="chkbox'+checkBoxID+'" value="'+chkboxValue+'"><a href="'+link+'" target="_blank">'+display+'  <span class="hidden_topic">'+subject_space + '</a></span></div>'+
 				'</div>'
 		

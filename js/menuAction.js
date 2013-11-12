@@ -28,7 +28,7 @@ $('#clearArchive').bind("click", function() {
 
 $('#removeSelected').bind("click", function(){
 	
-	if (confirm("Remove the selected answers from archive?")) {
+	if (confirm("Remove the selected content from archive?")) {
 		
 		// checkboxes are id'ed as chkbox<n>. Hence initializing the counter to 1 and incrementing to check all the checkboxes
 		var chkboxID = 1;
@@ -53,7 +53,7 @@ $('#removeSelected').bind("click", function(){
 			removeLink(links);
 		}
 		else {
-			alert('Please select the answers you want to remove.')
+			alert('Please select the content you want to remove.')
 		}
 		
 	}

@@ -1,5 +1,4 @@
 ﻿// gets the current logged in user name from Quora API
-
 var user = loggedUser();
 
 var storage = chrome.storage.local;
@@ -13,7 +12,7 @@ $("a.header_add_question_button").before('<li><a class="nav_item" href="' + chro
 
 $('div.main_col').on("mouseenter", "div.answer_wrapper", function() {
 	
-	$(this).children('div.item_action_bar').append('<span id="item_action_bar_archive_link"><span class="bullet"> • </span> <span class="archiveLink" style="cursor: pointer">Archive</span></span>');
+	$(this).find('div.item_action_bar').append('<span id="item_action_bar_archive_link"><span class="bullet"> • </span> <span class="archiveLink" style="cursor: pointer">Archive</span></span>');
 	
 	$('.archiveLink').bind('click', function() {
 		
@@ -26,14 +25,14 @@ $('div.main_col').on("mouseenter", "div.answer_wrapper", function() {
 // Removing archive link from question page
 
 $('div.main_col').on("mouseleave", "div.answer_wrapper", function() {
-	$(this).children('div.item_action_bar').children('#item_action_bar_archive_link').remove();
+	$(this).find('div.item_action_bar').children('#item_action_bar_archive_link').remove();
 })
 
 
 // Injecting archive link on the homepage feed.
 
-$('div.feed_col').on("mouseenter", "div.feed_item_answer_content", function() {
-	$(this).children('div.item_action_bar').append('<span id="item_action_bar_archive_link"><span class="bullet"> • </span> <span class="archiveLink" style="cursor: pointer">Archive</span></span>');
+$('div.feed_col').on("mouseenter", "div.expanded_feed_content", function() {
+	$(this).find('div.item_action_bar').append('<span id="item_action_bar_archive_link"><span class="bullet"> • </span> <span class="archiveLink" style="cursor: pointer">Archive</span></span>');
 	$('.archiveLink').bind('click', function() {
 		archiveClick($(this).parent());
 	});
@@ -42,9 +41,31 @@ $('div.feed_col').on("mouseenter", "div.feed_item_answer_content", function() {
 
 // Removing archive link from homepage
 
-$('div.feed_col').on("mouseleave", "div.feed_item_answer_content", function() {
-	$(this).children('div.item_action_bar').children('#item_action_bar_archive_link').remove();
+$('div.feed_col').on("mouseleave", "div.expanded_feed_content", function() {
+	$(this).find('div.item_action_bar').children('#item_action_bar_archive_link').remove();
 })
+
+
+// Injecting archive link on the Post page
+
+$('div.main_col').on("mouseenter", "div.board_item_content", function() {
+	
+	$(this).find('div.blog_item_actions').append('<span id="item_action_bar_archive_link"><span class="bullet"> • </span> <span class="archiveLink" style="cursor: pointer">Archive</span></span>');
+	
+	$('.archiveLink').bind('click', function() {
+		
+		// passing the div which contains the Archive link (on the question page). This contains the timestamp field which links to the answer page.
+		archiveClick($(this).parent());
+	});
+})
+
+
+// Removing archive link from post page
+
+$('div.main_col').on("mouseleave", "div.board_item_content", function() {
+	$(this).find('div.blog_item_actions').children('#item_action_bar_archive_link').remove();
+})
+
 
 // Adding status message div to the page
 $('body').append('<div class="above_page_banner" id="answer_archived_message" style="display:none; background: green; color: white;">Answer archived.</div>');
@@ -65,10 +86,10 @@ function archiveClick(currentElement) {
 	
 	var link = $(currentElement).parent().find(".answer_permalink").attr('href');
 		
-	if (link == '') {		// triggered if the answer_permalink field is not found. If not, the script will search for another element with tag 'timestamp' to extract the link
+	if (link == '' || typeof link == 'undefined') {		// triggered if the answer_permalink field is not found. If not, the script will search for another element with tag 'timestamp' to extract the link
   		var link = $(currentElement).parent().find(".timestamp").attr('href');
   	}
-	
+  	
 	addLink(currentElement, link)
 
 }
