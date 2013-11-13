@@ -94,7 +94,7 @@ function archiveClick(currentElement) {
 
 }
 
-/* PURPOSE - Add the link to the archive (storage).
+/* PURPOSE - Add the link to the chrome local storage.
  * INPUT - 1. Parent div of the clicked archive button
  * 		2. link to the answer page.
  * OUTPUT - Alert with a success or error message
@@ -108,7 +108,7 @@ function addLink(element, link) {
   	storage.get(user, function(items) {
   		userLinks = items[user];
   	
-  		if (typeof userLinks != 'undefined' && userLinks.indexOf(link) != -1) {
+  		if (typeof userLinks != 'undefined' && userLinks.indexOf(link) != -1) {		// checks if the link is already present in the archive. Hence, first check if there are contents in the archive. If true, then check for the link.
   			$('div#link_present_message').slideDown(300).delay(1500).slideUp(300);
   			return;
   		}

@@ -46,26 +46,26 @@ function isValidLink (link) {
 	if (link.length == 0)
 		return false;
 		
-	// link is that of a post which is either of the format "http://startuplife.quora.com/15-Reasons-Why-Start-ups-are-ing-Hard" or 	"/Michael-Thomas-37/Posts/The-Paradox-of-Productivity"
+	// link to a post is either of the format "http://startuplife.quora.com/15-Reasons-Why-Start-ups-are-ing-Hard" or 	"/Michael-Thomas-37/Posts/The-Paradox-of-Productivity"
 	// this checks for links of the first type.
-	if ( link.match(/http:\/\/.+quora.com\/.+/)!=null)	
+	if ( link.match(/(http|https):\/\/[\w\-+]+\.quora\.com\/[\w\-+]+/i) != null)	
 		return true;
 	
 	
-	// link is structure as http://www.quora.com <link>
+	// link is structured as http://www.quora.com<link>
 	// Hence, the first character of the passed argument should be '/'
 	
 	if (link.charAt(0) != '/')
 		return false;
 
-	if (link.match(/[^A-Za-z0-9+/-]/) != null)
+	if (link.match(/[^\w+/-]/) != null)
 		return false 
 	
 	try {
 		link = link.split('/');
 		
 		// length 3 required for
-		// answerer, link type (answer etc.), question text
+		// answerer, link type (answer, post etc.), question text
 		// optionally primary topic is also attached
 		if (link.length < 3)
 			return false;
@@ -137,7 +137,7 @@ function contentPopulate() {
   			
   			if (isValidLink(userLinks[i])){
   				
-  				if ( userLinks[i].match(/http:\/\/.+quora.com\/.+/)!=null || userLinks[i].indexOf('answer')==-1)		// if the link is that of a post
+  				if ( userLinks[i].match(/(http|https):\/\/[\w\-+]+\.quora\.com\/[\w\-+]+/i) != null || userLinks[i].indexOf('answer') == -1)		// if the link is that of a post
   					displayBlogLink(userLinks[i])
   				else
   					displayAnswerLink(userLinks[i])
@@ -149,7 +149,7 @@ function contentPopulate() {
 
 
 /*
- * PURPOSE - Displays a link in the appropriate region on the index page
+ * PURPOSE - Displays a link to an answer in the appropriate region on the index page
  * INPUT - link (string)
  * OUTPUT - none
  */
@@ -223,7 +223,7 @@ function displayBlogLink(link) {
 	/* post links are of 2 types. 
 	// 1. http://startuplife.quora.com/15-Reasons-Why-Start-ups-are-ing-Hard
 	// 2. /Michael-Thomas-37/Posts/The-Paradox-of-Productivity
-	This is to add domain name to the 2ns category links
+	This is to add domain name to the 2nd category links
 	*/
 	
 	if (link.charAt(0) == '/')
