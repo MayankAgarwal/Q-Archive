@@ -8,6 +8,8 @@ var intervalID = window.setInterval(checkUserLoggedIn, 2000);
 // this variable keeps a tab on the <n> part of the checkbox
 var checkBoxID = 1;
 
+// array to store the subjects of the archive contents. Used for suggestions
+var subjects = [];
 
 /*
  * PURPOSE - Check if the username has been received from the Quora API.
@@ -143,6 +145,8 @@ function contentPopulate() {
   					displayAnswerLink(userLinks[i])
   			}
   		}
+  		
+  		populateSuggestionBoard();
 	
 	})
 }
@@ -173,6 +177,9 @@ function displayAnswerLink(link) {
 	var html = "";
 	
 	if (div.length == 0) {		// if no div for the topic exists
+		
+		if (subject != 'No-Primary-Topic')
+			subjects.push(subject);
 		
 		html = '<div class="row-fluid"  id="'+subject+'">' +
 					'<div class="span12 subject_header">'+subject_space+'<a href="'+subjectHREF+'" target="_blank" style="margin-left: 20px; font-size:10px;color:black" name="'+subject+'">Topic Page</a><a href="'+(subjectHREF+'/best_questions')+'" target="_blank" style="margin-left: 20px; font-size:10px;color:black">Best Questions</a></div>' +
@@ -302,4 +309,49 @@ function populateArchiveStatus() {
 	$('#availableSpace').html('<strong>Free space: </strong>'+freeSpace)
 	
 	});
+}
+
+
+
+/*
+ * PURPOSE - Fetches the RSS feed for random 10 topics and displays a random question link from each
+ * INPUT - none
+ * OUTPUT - none
+ */
+
+
+function populateSuggestionBoard() {
+	
+	// empty Archive
+	if (subjects.length==0)
+		return;
+	
+	// shuffles the subjects
+	subjects.sort(function() { return 0.5-Math.random() });
+	
+	var randStartPos = Math.floor(Math.random()*(subjects.length-11>0?subjects.length-11:0));
+	
+	for (var i=randStartPos; i<Math.min(randStartPos + 10, randStartPos+subjects.length); i++) {
+		
+		var url = "http://www.quora.com/" + subjects[i] +"/best_questions/rss";
+		
+		$.get(url, function(data) {
+			var title = $(data).find('item title');
+			var link = $(data).find('item link');
+			var desc = $(data).find('item description');
+			
+			// there exists best answers for the particular topic
+			if (title.length!=0) {
+			
+				var randPos = Math.floor(Math.random()*title.length); 		// random item in the rss feed.
+			
+				var html = '<div style="margin-bottom:15px"><a href="'+link[randPos].textContent+'" target="_blank">'+title[randPos].textContent+'</a><br>'+desc[randPos].textContent.match(/[\d]+ Answers|[\d]+ Answer/i)+'</div>'
+			
+				$('div#recommendedContent').append(html)
+			}
+			
+		})
+	}
+	
+	
 }

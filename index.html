@@ -14,31 +14,43 @@
     <title>Quora Archive</title>
   </head>
   <body>
+  	
     <div class="row-fluid">
     	<div class="span12 header">
-    		<a href=""><img src="images/icon.png"></a></img>
+    		<div class="row-fluid">
+    			<div class="span6">
+    				<a href=""><img src="images/icon.png" /></a>
+    				<input type="text" class="form-control" placeholder="Search Archive" id="search" autofocus="on">
+    			</div>
+    			<div class="span5 offset1">
+    				<div class="dropdown span3 dropdown_div">
+    					<a class="dropdown-toggle" data-toggle="dropdown" href="#"><img src="images/menu-trash.png" style="margin-right:10px;" />Clear Archive</a>
+    					<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+    						<li id="removeSelected"><div class="menu_item"><i class="icon-remove" style="margin-right:10px"></i>  Remove Contents</div></li>
+    						<li id="clearArchive"><div class="menu_item"><i class="icon-refresh" style="margin-right:10px"></i>  Clear Archive</div></li>
+    					</ul>
+    				</div>
+    				<div class="dropdown span4 dropdown_div">
+    					<a class="dropdown-toggle" data-toggle="dropdown" href="#"><img src="images/menu-transfer.png" style="margin-right:10px;" />Export/Import Archive</a>
+    					<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+    						<li id="exportArchive"><div class="menu_item"><i class="icon-upload" style="margin-right:10px"></i>  Export Archive</div></li>
+    						<li id="importArchive"><div class="menu_item"><i class="icon-download" style="margin-right:10px"></i>  Import Archive</div></li>
+    					</ul>
+    				</div>
+
+    				<div class="dropdown span3 dropdown_div">
+    					<a class="dropdown-toggle" data-toggle="dropdown" href="#"><img src="images/menu-about.png" style="margin-right:10px;" />About</a>
+    					<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" style="text-align: left">
+    						<li><div class="menu_item"><a href="https://github.com/MayankAgarwal/quora-archive/issues" target="_blank"><img src="images/bug.png" style="margin-right:10px">Bugs/Enhancements</a></div></li>
+    						<li><div class="menu_item"><a href="about.html"><i class="icon-info-sign" style="margin-right:10px"></i>About</a></div></li>
+    						<li><div class="menu_item"><a href="https://sites.google.com/site/quoraarchive/" target="_blank"><i class="icon-question-sign" style="margin-right:10px"></i>Help</a></div></li>
+    					</ul>
+    				</div>
+    			</div>
+    		</div>
     	</div>
     </div>
     
-    <div class="row-fluid menu">
-    	<div class="span2 menu_item" id="removeSelected">
-    		<i class="icon-remove"></i>  Remove Contents
-    	</div>
-    	<div class="span2 menu_item" id="clearArchive">
-    		<i class="icon-refresh"></i>  Clear Archive
-    	</div>
-
-    	<div class="span4">
-    		<input type="text" class="form-control" placeholder="Search Archive" id="search" autofocus="on">
-    	</div>
-    	
-    	<div class="span2 menu_item" id="exportArchive">
-    		<i class="icon-upload"></i>  Export Archive
-    	</div>
-    	<div class="span2 menu_item" id="importArchive">
-    		<i class="icon-download"></i>  Import Archive
-    	</div>
-    </div>
     
     	<div class="row-fluid">
     	<div class="span10 offset1" id="archiveStatus">
@@ -66,25 +78,24 @@
     	</div>
     </div>
     	
-    <div class="row-fluid">
-    	<div id="content" class="span10 offset1">
+    <div class="row-fluid" style="margin-bottom:80px">
+    	<div id="content" class="span7 offset1">
     		    <div style="text-align:center; margin-top:40px;">
-    		    	<div><img src="images/loader.GIF" /></div>
+    		    	<div><img src="images/loader.GIF" /></div><br>
     		    	<div>Loading</div>
     		    </div>		
     	</div>
-    </div>
-    
-    <div class="row-fluid footer">
-    	<div class="span6 offset1"><strong>
-    		Report bugs or Suggest enhancements: <a href="https://github.com/MayankAgarwal/quora-archive/issues" target="_blank">GitHub - Quora Archive</a>
-    	</strong></div>
-    	<div class="span1">
-    		<strong><a href="about.html">About</a></strong>
+    	
+    	<div id="recommended_board" class="span3">
+    		<h4>Suggestions</h4><hr>
+    		
+    		<div id="recommendedContent">
+    			
+    			
+    		</div>
+    		
     	</div>
-    	<div class="span1">
-    		<strong><a href="https://sites.google.com/site/quoraarchive/" target="_blank">Help</a></strong>
-    	</div>
+    	
     </div>
     
     

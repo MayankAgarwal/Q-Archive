@@ -24,9 +24,8 @@ body {
 }
 
 .header {
-	background-color: #8F1E00;
+	background-color: #E0E0E0;
 	position: fixed;
-	text-align:center;
 }
 
 .menu {
@@ -48,19 +47,65 @@ body {
 	margin-left: 20px;
 }
 
+.dropdown_div {
+	margin-top: 13px;
+	font-weight: bold;
+	text-align: center;
+}
+
+.dropdown_div a{
+	color: black;
+}
+
+.dropdown-menu a {
+	text-size: 12px;
+	color:black;
+}
+
+.dropdown-menu a:hover {
+	color:white;
+}
+
+.dropdown-toggle {
+	font-size: 12px;
+}
+.dropdown-toggle:hover {
+	underline: none;
+}
+
+.menu_no_dropdown {
+	font-size:12px;
+	color: black;
+	text-decoration: none;
+}
+
+.menu_no_dropdown:hover {
+	cursor: pointer;
+	color: black;
+}
+
 .menu_item {
 	font-size: 12px;
-	padding-top:12px;
-	padding-bottom:10px;
+	text-align: left;
+	padding-left: 25px;
+	padding-right:25px;
+	padding-top: 5px;
+	padding-bottom: 5px;
 }
 
 .menu_item:hover {
-	border-bottom: 5px solid #BCBCBC;
+	background: #0088cc;
+	color: white;
+}
+
+.menu_item:hover {
 	cursor:pointer;
 }
 
+
+
 #archiveStatus {
-	margin-top: 120px;
+	margin-top: 75px;
 	font-size: 85%;
 	text-align: center;
 }
@@ -76,10 +121,21 @@ body {
 
 
 #search {
-	background: url(../images/searchIcon.png) no-repeat scroll 7px 7px;
+	background: url(../images/searchIcon.png) white no-repeat scroll 7px 7px;
 	padding-left:30px;
-	margin-top: 5px;
-	width: 400px;
+	width: 450px;
+	margin-left: 22px;
+	height: 24px;
+	margin-bottom: 1px;
+}
+
+#recommended_board {
+	padding: 5px 15px 5px 15px;
+}
+
+#recommendedContent {
+	font-size: 12px;
+	padding: 0px 5px 0px 5px;
 }
 
 .subject_header {
@@ -99,10 +155,17 @@ body {
 	display: none;
 }
 
-.footer {
+
+#answerHeader {
 	font-size: 12px;
-	padding: 10px;
-	background-color: #EFEFEF; 
-	margin-top: 50px;
-	width: 100%;
+	margin-bottom: 20px;
+}
+
+#answerHeader a {
+	font-size: 13px;
+	color: black;
+}
+
+#answerBody {
+	font-size: 12px;
 }

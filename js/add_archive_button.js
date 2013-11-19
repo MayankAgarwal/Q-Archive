@@ -8,63 +8,53 @@ var storage = chrome.storage.local;
 $("a.header_add_question_button").before('<li><a class="nav_item" href="' + chrome.extension.getURL("index.html") + '" target="_blank">Archive</a></li>');
 
 
-// Injecting archive link on the question page
 
-$('div.main_col').on("mouseenter", "div.answer_wrapper", function() {
-	
-	$(this).find('div.item_action_bar').append('<span id="item_action_bar_archive_link"><span class="bullet"> • </span> <span class="archiveLink" style="cursor: pointer">Archive</span></span>');
+// injecting archive link on Homepage feed, Blog posts feed, Subject page, Profile page
+$('body').on("mouseenter", "div.feed_item", function() {
+	$(this).find('div.item_action_bar').append('<span id="item_action_bar_archive_link"><span class="bullet"> • </span> <span class="archiveLink" style="cursor: pointer; color:black; font-weight:bold">Archive</span></span>');
 	
 	$('.archiveLink').bind('click', function() {
-		
 		// passing the div which contains the Archive link (on the question page). This contains the timestamp field which links to the answer page.
 		archiveClick($(this).parent());
-	});
+	})
 })
 
-
-// Removing archive link from question page
-
-$('div.main_col').on("mouseleave", "div.answer_wrapper", function() {
+$('body').on("mouseleave", "div.feed_item", function() {
 	$(this).find('div.item_action_bar').children('#item_action_bar_archive_link').remove();
 })
 
 
-// Injecting archive link on the homepage feed.
 
-$('div.feed_col').on("mouseenter", "div.expanded_feed_content", function() {
-	$(this).find('div.item_action_bar').append('<span id="item_action_bar_archive_link"><span class="bullet"> • </span> <span class="archiveLink" style="cursor: pointer">Archive</span></span>');
+// injecting archive link on Question page
+$('body').on("mouseenter", "div.answer_wrapper", function() {
+	$(this).find('div.item_action_bar').append('<span id="item_action_bar_archive_link"><span class="bullet"> • </span> <span class="archiveLink" style="cursor: pointer; color:black; font-weight:bold">Archive</span></span>');
+	
 	$('.archiveLink').bind('click', function() {
+		// passing the div which contains the Archive link (on the question page). This contains the timestamp field which links to the answer page.
 		archiveClick($(this).parent());
-	});
+	})
 })
 
-
-// Removing archive link from homepage
-
-$('div.feed_col').on("mouseleave", "div.expanded_feed_content", function() {
+$('body').on("mouseleave", "div.answer_wrapper", function() {
 	$(this).find('div.item_action_bar').children('#item_action_bar_archive_link').remove();
 })
 
 
-// Injecting archive link on the Post page
 
-$('div.main_col').on("mouseenter", "div.board_item_content", function() {
-	
-	$(this).find('div.blog_item_actions').append('<span id="item_action_bar_archive_link"><span class="bullet"> • </span> <span class="archiveLink" style="cursor: pointer">Archive</span></span>');
+// injecting archive link on Post page
+$('body').on("mouseenter", "div.board_item_content", function() {
+	$(this).find('div.blog_item_actions').append('<span id="item_action_bar_archive_link"><span class="bullet"> • </span> <span class="archiveLink" style="cursor: pointer; color:black; font-weight:bold">Archive</span></span>');
 	
 	$('.archiveLink').bind('click', function() {
-		
 		// passing the div which contains the Archive link (on the question page). This contains the timestamp field which links to the answer page.
 		archiveClick($(this).parent());
-	});
+	})
 })
 
-
-// Removing archive link from post page
-
-$('div.main_col').on("mouseleave", "div.board_item_content", function() {
+$('body').on("mouseleave", "div.board_item_content", function() {
 	$(this).find('div.blog_item_actions').children('#item_action_bar_archive_link').remove();
 })
+
 
 
 // Adding status message div to the page

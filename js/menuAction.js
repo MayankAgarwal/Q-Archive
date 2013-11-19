@@ -1,5 +1,5 @@
 /* SCRIPT CALLED ON index.html AND HANDLES ALL THE MENU RELATED ACTIONS ON THE PAGE */
-
+$('#generatePDF').tooltip('show')
 var storage = chrome.storage.local;
 var user = loggedUser();
 
@@ -30,7 +30,28 @@ $('#removeSelected').bind("click", function(){
 	
 	if (confirm("Remove the selected content from archive?")) {
 		
-		// checkboxes are id'ed as chkbox<n>. Hence initializing the counter to 1 and incrementing to check all the checkboxes
+		links = selectedLinks();
+			
+		if (links.length!=0) {		// if the user indeed selected answers to remove, then pass the array to removeLinks function.
+			removeLink(links);
+		}
+		else {
+			alert('Please select the content you want to remove.')
+		}
+		
+	}
+	
+})
+
+/* 
+ * PURPOSE - Gets the links of the selected checkboxes
+ * INPUT - None
+ * OUTPUT - an array of links.
+ */
+
+function selectedLinks() {
+	
+	// checkboxes are id'ed as chkbox<n>. Hence initializing the counter to 1 and incrementing to check all the checkboxes
 		var chkboxID = 1;
 		
 		// holds the links to remove from the archive.
@@ -48,17 +69,8 @@ $('#removeSelected').bind("click", function(){
 			chkbox = $('body').find('#chkbox'+chkboxID);
 			chkboxID += 1;
 		}
-		
-		if (links.length!=0) {		// if the user indeed selected answers to remove, then pass the array to removeLinks function.
-			removeLink(links);
-		}
-		else {
-			alert('Please select the content you want to remove.')
-		}
-		
-	}
-	
-})
+	return links;
+}
 
 
 /* 
@@ -115,6 +127,9 @@ function loggedUser()
 			},
 	 error: function(jqXHR, textStatus, errorThrown)
 	 	{
+	 		clearInterval(intervalID);
+	 		console.log(jqXHR.error, textStatus, errorThrown)
+	 		$('#content').html('<h4>Error '+jqXHR.status+' ('+jqXHR.statusText+'). Please reload.</h4>')
 	 	},
 	 timeout: 15000
 	});
@@ -245,3 +260,4 @@ $('#button-container').on("click", "a#import_archive_action", function() {
 		
 	})
 });
+
