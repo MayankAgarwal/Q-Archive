@@ -3,9 +3,9 @@
 	
 	"name": "Quora Archive",
 	
-	"version": "1.2.0",
+	"version": "1.2.1.1",
 	
-	"description": "Archive answers on Quora",
+	"description": "Easily archive your favourite answers and posts on Quora",
 
 	"icons": {"48": "icons/icon48.png",
 		  "128": "icons/icon128.png"
@@ -27,7 +27,7 @@
 
 	"content_scripts": [
 		{
-			"matches": ["http://www.quora.com/*", "https://www.quora.com/*"],
+			"matches": ["*://*.quora.com/*"],
 			"js": ["js/jquery.js", "js/add_archive_button.js"],
 			"all_frames": true
 		}

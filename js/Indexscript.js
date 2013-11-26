@@ -41,7 +41,7 @@ function checkUserLoggedIn(){
  */
 
 function isValidLink (link) {
-
+	
 	if (typeof link != 'string')
 		return false;
 	

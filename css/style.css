@@ -123,13 +123,13 @@ body {
 #search {
 	background: url(../images/searchIcon.png) white no-repeat scroll 7px 7px;
 	padding-left:30px;
-	width: 450px;
+	width: 400px;
 	margin-left: 22px;
 	height: 24px;
 	margin-bottom: 1px;
 }
 
-#recommended_board {
+#right_board {
 	padding: 5px 15px 5px 15px;
 }
 
@@ -168,4 +168,12 @@ body {
 
 #answerBody {
 	font-size: 12px;
+}
+
+#feedback {
+	position: fixed;
+	width:100px;
+	height:100px;
+	bottom:100px;
+	left:0px;
 }

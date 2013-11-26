@@ -12,7 +12,7 @@ $("a.header_add_question_button").before('<li><a class="nav_item" href="' + chro
 // injecting archive link on Homepage feed, Blog posts feed, Subject page, Profile page
 $('body').on("mouseenter", "div.feed_item", function() {
 	$(this).find('div.item_action_bar').append('<span id="item_action_bar_archive_link"><span class="bullet"> • </span> <span class="archiveLink" style="cursor: pointer; color:black; font-weight:bold">Archive</span></span>');
-	
+
 	$('.archiveLink').bind('click', function() {
 		// passing the div which contains the Archive link (on the question page). This contains the timestamp field which links to the answer page.
 		archiveClick($(this).parent());
@@ -40,7 +40,6 @@ $('body').on("mouseleave", "div.answer_wrapper", function() {
 })
 
 
-
 // injecting archive link on Post page
 $('body').on("mouseenter", "div.board_item_content", function() {
 	$(this).find('div.blog_item_actions').append('<span id="item_action_bar_archive_link"><span class="bullet"> • </span> <span class="archiveLink" style="cursor: pointer; color:black; font-weight:bold">Archive</span></span>');
@@ -60,6 +59,7 @@ $('body').on("mouseleave", "div.board_item_content", function() {
 // Adding status message div to the page
 $('body').append('<div class="above_page_banner" id="answer_archived_message" style="display:none; background: green; color: white;">Answer archived.</div>');
 $('body').append('<div class="above_page_banner" id="link_present_message" style="display:none">Link already present in the archive.</div>');
+$('body').append('<div class="above_page_banner" id="custom_error_message" style="display:none; background:#a82300; color:white;"></div>');
 
 
 /* Purpose - extract the link of the answer to archive from the timestamp or answer_permalink field. Pass it on to other function to add it to the archive.
@@ -74,10 +74,16 @@ function archiveClick(currentElement) {
 		return false;
 	}
 	
-	var link = $(currentElement).parent().find(".answer_permalink").attr('href');
+	var link = $(currentElement).parent().parent().find(".answer_permalink").attr('href');
 		
 	if (link == '' || typeof link == 'undefined') {		// triggered if the answer_permalink field is not found. If not, the script will search for another element with tag 'timestamp' to extract the link
   		var link = $(currentElement).parent().find(".timestamp").attr('href');
+  	}
+  	
+  	if (link == '' || typeof link == 'undefined') {
+  		$('div#custom_error_message').text('Link not found. Try expanding the post and then clicking the archive link.')
+  		$('div#custom_error_message').slideDown(300).delay(1500).slideUp(300);
+  		return;
   	}
   	
 	addLink(currentElement, link)
