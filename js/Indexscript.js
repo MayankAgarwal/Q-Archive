@@ -130,7 +130,7 @@ function contentPopulate() {
   		userLinks = items[user];
   		
   		if (typeof userLinks == 'undefined') {
-  			$('#content').append('<div style="text-align:center"><h1>No archived answers.</h1></div>')
+  			$('#content').append('<div style="text-align:center"><h1>No archived answers :(</h1><br />Need help? Visit <a href="https://sites.google.com/site/quoraarchive/" target="_blank">Quora Archive</a></div>')
   		}
 
 		userLinks = userLinks.split(';');

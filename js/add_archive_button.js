@@ -74,10 +74,10 @@ function archiveClick(currentElement) {
 		return false;
 	}
 	
-	var link = $(currentElement).parent().parent().find(".answer_permalink").attr('href');
+	var link = $(currentElement).parent().parent().find("a.answer_permalink").attr('href');
 		
 	if (link == '' || typeof link == 'undefined') {		// triggered if the answer_permalink field is not found. If not, the script will search for another element with tag 'timestamp' to extract the link
-  		var link = $(currentElement).parent().find(".timestamp").attr('href');
+  		var link = $(currentElement).parent().find("a.timestamp").attr('href');
   	}
   	
   	if (link == '' || typeof link == 'undefined') {
