@@ -11,7 +11,7 @@ $("a.header_add_question_button").before('<li><a class="nav_item" href="' + chro
 
 // injecting archive link on Homepage feed, Blog posts feed, Subject page, Profile page
 $('body').on("mouseenter", "div.feed_item", function() {
-	$(this).find('div.item_action_bar').append('<span id="item_action_bar_archive_link"><span class="bullet"> • </span> <span class="archiveLink" style="cursor: pointer; color:black; font-weight:bold">Archive</span></span>');
+	$(this).find('div.item_action_bar').append('<span id="item_action_bar_archive_link"><span class="bullet"> • </span> <span class="archiveLink" style="cursor: pointer; color:black; font-weight:bold">1-Archive</span></span>');
 
 	$('.archiveLink').bind('click', function() {
 		// passing the div which contains the Archive link (on the question page). This contains the timestamp field which links to the answer page.
@@ -27,7 +27,7 @@ $('body').on("mouseleave", "div.feed_item", function() {
 
 // injecting archive link on Question page
 $('body').on("mouseenter", "div.answer_wrapper", function() {
-	$(this).find('div.item_action_bar').append('<span id="item_action_bar_archive_link"><span class="bullet"> • </span> <span class="archiveLink" style="cursor: pointer; color:black; font-weight:bold">Archive</span></span>');
+	$(this).find('div.item_action_bar').append('<span id="item_action_bar_archive_link"><span class="bullet"> • </span> <span class="archiveLink" style="cursor: pointer; color:black; font-weight:bold">2-Archive</span></span>');
 	
 	$('.archiveLink').bind('click', function() {
 		// passing the div which contains the Archive link (on the question page). This contains the timestamp field which links to the answer page.
@@ -42,7 +42,7 @@ $('body').on("mouseleave", "div.answer_wrapper", function() {
 
 // injecting archive link on Post page
 $('body').on("mouseenter", "div.board_item_content", function() {
-	$(this).find('div.blog_item_actions').append('<span id="item_action_bar_archive_link"><span class="bullet"> • </span> <span class="archiveLink" style="cursor: pointer; color:black; font-weight:bold">Archive</span></span>');
+	$(this).find('div.blog_item_actions').append('<span id="item_action_bar_archive_link"><span class="bullet"> • </span> <span class="archiveLink" style="cursor: pointer; color:black; font-weight:bold">3-Archive</span></span>');
 	
 	$('.archiveLink').bind('click', function() {
 		// passing the div which contains the Archive link (on the question page). This contains the timestamp field which links to the answer page.

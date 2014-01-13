@@ -175,6 +175,12 @@ function displayAnswerLink(link) {
 	var div = $('body').find('#' + subject);
 	
 	var html = "";
+
+
+	var subject_header_link = '<div class="span12 subject_header">'+subject_space+'<a href="'+subjectHREF+'" target="_blank" style="margin-left: 20px; font-size:10px;color:black" name="'+subject+'">Topic Page</a><a href="'+(subjectHREF+'/best_questions')+'" target="_blank" style="margin-left: 20px; font-size:10px;color:black">Best Questions</a></div>';
+
+	var answer_link_content_html = '<div class="span11 answer_link"><input type="checkbox" style="margin-right:10px;" id="chkbox'+checkBoxID+'" value="'+chkboxValue+'"><a href="'+link+'" target="_blank">'+display+'  <span class="hidden_topic">'+subject_space + '</a></span></div>';
+
 	
 	if (div.length == 0) {		// if no div for the topic exists
 		
@@ -182,8 +188,8 @@ function displayAnswerLink(link) {
 			subjects.push(subject);
 		
 		html = '<div class="row-fluid"  id="'+subject+'">' +
-					'<div class="span12 subject_header">'+subject_space+'<a href="'+subjectHREF+'" target="_blank" style="margin-left: 20px; font-size:10px;color:black" name="'+subject+'">Topic Page</a><a href="'+(subjectHREF+'/best_questions')+'" target="_blank" style="margin-left: 20px; font-size:10px;color:black">Best Questions</a></div>' +
-					'<div class="span12 answer_link"><input type="checkbox" style="margin-right:10px;" id="chkbox'+checkBoxID+'" value="'+chkboxValue+'"><a href="'+link+'" target="_blank">'+display+'  <span class="hidden_topic">'+subject_space + '</a></span></div>'+
+					 subject_header_link +
+					 answer_link_content_html +
 				'</div>'
 		
 		checkBoxID += 1;
@@ -196,7 +202,7 @@ function displayAnswerLink(link) {
 	
 	else {	// append to the existing topic div
 		
-		html = '<div class="span12 answer_link"><input type="checkbox" style="margin-right:10px;" id="chkbox'+checkBoxID+'" value="'+chkboxValue+'"><a href="'+link+'" target="_blank">'+display+'  <span class="hidden_topic">'+subject_space + '</a></span></div>';
+		html = answer_link_content_html;
 		checkBoxID += 1;
 		
 		$('#'+subject).append(html)
@@ -304,9 +310,9 @@ function populateArchiveStatus() {
 		freeSpace = (freeSpace).toPrecision(3) + 'bytes';
 	}
 	
-	$('#totalSpace').html('<strong>Total available space: </strong>'+totalSpace);
-	$('#usedSpace').html('<strong>Used Space: </strong>'+usedSpace);
-	$('#availableSpace').html('<strong>Free space: </strong>'+freeSpace)
+	$('#totalSpace').html('Available space: '+totalSpace);
+	$('#usedSpace').html('Used Space: '+usedSpace);
+	$('#availableSpace').html('Free space: '+freeSpace)
 	
 	});
 }

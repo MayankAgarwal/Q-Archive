@@ -24,7 +24,7 @@ body {
 }
 
 .header {
-	background-color: #E0E0E0;
+	background-color: #f2f2f2;
 	position: fixed;
 }
 
@@ -103,16 +103,27 @@ body {
 }
 
 
+#secondary-menu {
+	margin-top: 55px;
+	padding-left: 35px;
+	border-bottom: 1px solid #DEDEDE;
+	margin-bottom: 13px;
+}
 
 #archiveStatus {
-	margin-top: 75px;
 	font-size: 85%;
-	text-align: center;
+	text-align: left;
+	padding-left: 10px;
 }
 
 #tags {
 	font-size: 80%;
 	display:none;
+
+	padding: 8px;
+	border: 1px solid #EFEFEF;
+	border-radius: 7px;
+
 }
 
 #tags > span {
@@ -122,15 +133,23 @@ body {
 
 #search {
 	background: url(../images/searchIcon.png) white no-repeat scroll 7px 7px;
+	border-radius: 4px;
 	padding-left:30px;
 	width: 400px;
 	margin-left: 22px;
-	height: 24px;
+	height: 22px;
 	margin-bottom: 1px;
+
+	font-size:12px;
 }
 
 #right_board {
 	padding: 5px 15px 5px 15px;
+}
+
+.right_panel_header {
+	font-size: 13px;
+	font-weight: 700;
 }
 
 #recommendedContent {
@@ -139,11 +158,11 @@ body {
 }
 
 .subject_header {
-	font-size: 16px;
+	font-size: 13px;
 	font-weight: 700;
 	border-bottom: 1px solid #DFDFDF;
-	margin-bottom: 20px;
-	margin-top:20px;
+	margin-bottom: 15px;
+	margin-top:18px;
 	padding-left: 10px;
 }
 
@@ -176,4 +195,17 @@ body {
 	height:100px;
 	bottom:100px;
 	left:0px;
+}
+
+#top-arrow {
+	position: fixed;
+	width: 32px;
+	height: 32px;
+	bottom: 20px;
+	right: 30px;
+}
+
+#top-arrow:hover {
+	background: #f2f2f2;
+	cursor: pointer;
 }

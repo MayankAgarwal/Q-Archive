@@ -1,5 +1,5 @@
 /* SCRIPT CALLED ON index.html AND HANDLES ALL THE MENU RELATED ACTIONS ON THE PAGE */
-$('#generatePDF').tooltip('show')
+
 var storage = chrome.storage.local;
 var user = loggedUser();
 
@@ -106,7 +106,7 @@ function removeLink(links) {
 
 function loggedUser()
 {
-	
+
 	url = "http://api.quora.com/api/logged_in_user";
 	
 	$.ajax({
@@ -261,3 +261,114 @@ $('#button-container').on("click", "a#import_archive_action", function() {
 	})
 });
 
+
+
+/*  Binded to a click event on the surprise me link
+*
+* Purpose: Choose a random link from the archive and open it in a new tab
+*
+* Input: none
+* Output: opens a new tab with a randomly chosen link
+*/
+
+
+$('#surpriseMe').bind("click", function() {
+
+	storage.get(user, function (items) {
+		var userLinks = items[user];
+
+		userLinks = userLinks.split(";")
+
+		var randPos = Math.floor((Math.random()*userLinks.length)+1);
+
+		if (isValidLink(userLinks[randPos])) {
+			var chosenURL = userLinks[randPos];
+
+			// if the chosen URL is that of an answer (answer URLs start with '/'), then append http://www.quora.com to it.
+
+			if (chosenURL.charAt(0) == '/') {
+				chosenURL = "http://www.quora.com"+chosenURL;
+			}
+
+			var win = window.open(chosenURL, "_blank")
+			win.focus();
+
+		}
+
+	})
+
+	return false;
+})
+
+
+
+/*  Binded to a click event on the top arrow link
+*
+* Purpose: Scroll to the top of the document
+*
+*/
+
+$('#top-arrow').bind('click', function () {
+
+	var percentageToScroll = 100;
+	var percentage = percentageToScroll/100;
+	var height = $(document).scrollTop();
+	var scrollAmount = height * (1-percentage);
+
+	$('html body').animate({
+		scrollTop: scrollAmount
+	}, 'slow');
+
+})
+
+
+/*  Binded to a click event on the Download Answers offline link
+*
+* Purpose: Downloads the selected answers as an mhtml file
+*
+*/
+
+$("#download_answers_offline").bind('click', function() {
+		
+		var links = selectedLinks();
+
+		if (links.length == 0) {
+			alert("Select answers to download offline.");
+			return false;
+		}
+
+		// A limit of 10 links that can be downloaded at a time is set. This is based on intuition rather than solid technical know-how. 
+		if (links.length > 10) {
+			alert('Only 10 answers at a time supported. Currently ' + links.length + ' answers selected.');
+			return false;
+		}
+
+		for (var i=0; i<links.length; i++) {
+			
+			// Skip if a blog link is chosen.
+
+			if (links[i].charAt(0)!='/')
+				continue;
+
+			var answerURL = "http://www.quora.com" + links[i];
+			var url = chrome.extension.getURL("download.html") + "?url=" + encodeURIComponent(answerURL);
+
+			var win = window.open(url, "_blank");
+
+		}
+
+		return false;
+
+})
+
+
+/*  
+*
+* Purpose: Deselects all checkboxes on the page.
+*
+*/
+
+$('#deselect_checkboxes').bind('click', function() {
+	$('input:checkbox').prop('checked', false);
+	return false;
+})

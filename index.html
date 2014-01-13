@@ -19,8 +19,8 @@
     	<div class="span12 header">
     		<div class="row-fluid">
     			<div class="span7">
-    				<a href=""><img src="images/icon.png" /></a>
-    				<input type="text" class="form-control" placeholder="Search Archive" id="search" autofocus="on">
+    				<a href=""><img src="images/icon.jpg" /></a>
+    				<input type="text" class="form-control" placeholder="Search Archive (Use comma to apply multiple filters)" id="search" autofocus="on">
     			</div>
     			<div class="span5">
     				<div class="dropdown span3 dropdown_div">
@@ -50,29 +50,31 @@
     		</div>
     	</div>
     </div>
-    
-    
-    	<div class="row-fluid">
-    	<div class="span10 offset1" id="archiveStatus">
-    		<div class="row-fluid">
-    			<div class="span4" id="totalSpace">
-    				
-    			</div>
-    			<div class="span4" id="usedSpace">
-    				
-    			</div>
-    			<div class="span4" id="availableSpace">
-    				
-    			</div>
-    		</div>
-    	</div>
+
     </div>
    
    
-    <div class="row-fluid">
-    	<div class="span10 offset1">
-    		<span id="show-hide-tags"><a href="#"><small><strong>Show/Hide Topics:</strong></small></a></span>
+    <div class="row-fluid" id="secondary-menu">
+    	
+    	<div class="span2">
+    		<span id="show-hide-tags"><a href="#"><small><img src="images/tags.png" style="margin-right: 10px;" />Show/Hide Topics</small></a></span>
+    	</div> 
+    	
+    	<div class="span2">
+    		<span id="surpriseMe"><small><a href="#" title="Open a random answer from archive"><img src="images/surprise.png" style="margin-right: 10px;" />Surprise me!</a></small></span>
     	</div>
+
+    	<div class="span2">
+    		<span id="download_answers_offline"><a href="#" title="Select answers to download offline. Blogs not supported."><small><img src="images/download.png" style="margin-right: 10px"> Download answers offline</small></a></span>
+    	</div>
+
+    	<div class="span2">
+    		<span id="deselect_checkboxes"><a href="#"><small><img src="images/checkboxes.png" style="margin-right: 10px"> Deselect checkboxes</small></a></span>
+    	</div>
+
+    </div>
+
+    <div class="row-fluid">
     	<div class="span10 offset1" id="tags">
     		
     	</div>
@@ -88,20 +90,40 @@
     	
     	<div id="right_board" class="span3">
 
-    		<h4>Suggestions</h4><hr>
+    		<div class="right_panel_header" style="padding-bottom: 20px; padding-top: 18px;">Suggestions</div>
     		
     		<div id="recommendedContent">
     			
     			
     		</div>
-    		
-    	</div>
+
+    		<hr>
+
+    		<div class="row-fluid">
+    			<div id="archiveStatus">
+ 			   		<div class="row-fluid">
+
+ 			   			<div class="right_panel_header">Archive Status</div>
+ 			   			
+ 			   			<ul style="margin-top: 15px">
+    					<li id="totalSpace"></li>
+    					<li id="usedSpace"></li>
+						<li id="availableSpace"></li>
+						</ul>
+
+    				</div>
+    			</div>
+    		</div>
     	
     </div>
     
     <div id="feedback">
     	<a href="https://chrome.google.com/webstore/support/mkbefhjeldcphemeekekgdkppaikmmfe?hl=en&gl=IN#bug" target="_blank"><img src="images/feedback.jpg"></a>
     </div>
+
+    <span id="top-arrow">
+    	<img src="images/top-arrow.png">
+    </span>
     
     
     <!-- Export and Import archive modal -->
