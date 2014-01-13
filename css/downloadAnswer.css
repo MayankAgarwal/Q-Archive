@@ -37,6 +37,11 @@ h2 {
 	display: none;
 }
 
+.answer_attribution_names {
+	font-size: 12px;
+	margin-top: 20px;
+}
+
 img {
 	text-align: center;
 }

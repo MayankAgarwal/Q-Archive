@@ -39,9 +39,9 @@ function getURL() {
 
 function loadContent(url) {
 
-	var answer_header_url = url + " div.question_text";
+	var answer_header_url = url + " div.question_text:first";
 
-	var answer_body_url = url + " div.answer_content";
+	var answer_body_url = url + " div.answer_content:first";
 
 	loadAnswerHeader(answer_header_url);
 	loadAnswerBody(answer_body_url);

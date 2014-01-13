@@ -3,7 +3,7 @@
 	
 	"name": "Quora Archive",
 	
-	"version": "1.3.0",
+	"version": "1.3.0.2",
 	
 	"description": "Maintain a personal archive of your favourite Quora answers and posts. Read them later online or save a local copy.",
 
@@ -22,7 +22,7 @@
 	},
 	
 	"permissions": [
-		"*://*.quora.com/", "background", "storage", "tabs", "pageCapture"
+		"*://*.quora.com/", "background", "tabs", "storage", "pageCapture"
 	],
 
 	"content_scripts": [
