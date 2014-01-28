@@ -11,6 +11,10 @@ var checkBoxID = 1;
 // array to store the subjects of the archive contents. Used for suggestions
 var subjects = [];
 
+// array of subjects with spaces.
+var global_subjects_space = [];
+
+
 /*
  * PURPOSE - Check if the username has been received from the Quora API.
  * 			If not, then display appropriate message. Else, call functions to populate content on the page
@@ -20,17 +24,33 @@ var subjects = [];
 
 function checkUserLoggedIn(){
 	if (typeof user == 'undefined') {
-		$('#content').html('<h3>Waiting for Quora API to respond...</h3>')
+		$('#content').html('<h3 style="text-align:center">Waiting for Quora API to respond...</h3>')
 	}
 	else {
 		// clears the windows.setInterval
 		clearInterval(intervalID);
 		
 		populateArchiveStatus();		// populates the archive status div.
+		populateUserInformation();
 		
 		$('#content').html('');
 		contentPopulate();
 	}
+}
+
+
+/*
+ * PURPOSE - populates the user's name and loads the user profile pic on the header
+ * INPUT - none
+ * OUTPUT - none
+ */
+
+function populateUserInformation() {
+	$("#userName").text(user);
+
+	var img_url = profile_link + ' img.profile_photo_img:first';
+
+	$('#userProfilePic').load(img_url);
 }
 
 
@@ -177,16 +197,18 @@ function displayAnswerLink(link) {
 	var html = "";
 
 
-	var subject_header_link = '<div class="span12 subject_header">'+subject_space+'<a href="'+subjectHREF+'" target="_blank" style="margin-left: 20px; font-size:10px;color:black" name="'+subject+'">Topic Page</a><a href="'+(subjectHREF+'/best_questions')+'" target="_blank" style="margin-left: 20px; font-size:10px;color:black">Best Questions</a></div>';
+	var subject_header_link = '<div class="span12 subject_header"><a href="'+subjectHREF+'" target="_blank" style="color:black" name="'+subject+'">'+subject_space+'</a><a href="'+(subjectHREF+'/best_questions')+'" target="_blank" style="margin-left: 20px; font-size:10px;color:black">Best Questions</a></div>';
 
 	var answer_link_content_html = '<div class="span11 answer_link"><input type="checkbox" style="margin-right:10px;" id="chkbox'+checkBoxID+'" value="'+chkboxValue+'"><a href="'+link+'" target="_blank">'+display+'  <span class="hidden_topic">'+subject_space + '</a></span></div>';
 
 	
 	if (div.length == 0) {		// if no div for the topic exists
 		
-		if (subject != 'No-Primary-Topic')
-			subjects.push(subject);
+		subjects.push(subject);
 		
+		global_subjects_space.push(subject_space);
+
+
 		html = '<div class="row-fluid"  id="'+subject+'">' +
 					 subject_header_link +
 					 answer_link_content_html +
@@ -195,8 +217,6 @@ function displayAnswerLink(link) {
 		checkBoxID += 1;
 		
 		$('#content').prepend(html);
-		
-		$('#tags').append('<span><a href="#'+subject+'">'+subject_space+'</a></span>')
 		
 	}
 	
@@ -247,6 +267,8 @@ function displayBlogLink(link) {
 	var html = "";
 	
 	if (div.length == 0) {		// if no div for the topic exists
+
+		global_subjects_space.push(subject_space);
 		
 		html = '<div class="row-fluid"  id="'+subject+'">' +
 					'<div class="span12 subject_header">'+subject_space+'</div>' +
@@ -256,8 +278,6 @@ function displayBlogLink(link) {
 		checkBoxID += 1;
 		
 		$('#content').prepend(html);
-		
-		$('#tags').append('<span><a href="#'+subject+'">'+subject_space+'</a></span>')
 		
 	}
 	
@@ -331,6 +351,9 @@ function populateSuggestionBoard() {
 	// empty Archive
 	if (subjects.length==0)
 		return;
+
+	// clean recommended content div
+	$('#recommendedContent').html("");
 	
 	// shuffles the subjects
 	subjects.sort(function() { return 0.5-Math.random() });
@@ -361,3 +384,16 @@ function populateSuggestionBoard() {
 	
 	
 }
+
+
+/*
+ * PURPOSE - Attaches the autocomplete feature on the search textbox. Autocomplete feature used from JQuery UI.
+ * INPUT - none
+ * OUTPUT - none
+ */
+
+$(function() {
+	$( "#search" ).autocomplete({
+		source: global_subjects_space
+	});
+});

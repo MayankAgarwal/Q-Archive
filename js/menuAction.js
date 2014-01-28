@@ -1,12 +1,14 @@
 /* SCRIPT CALLED ON index.html AND HANDLES ALL THE MENU RELATED ACTIONS ON THE PAGE */
 
 var storage = chrome.storage.local;
-var user = loggedUser();
+var user, profile_link;
+
+loggedUser();
 
 
-$('#show-hide-tags').bind("click", function() {
-	$('#tags').toggle();
-	return false;
+$('#user-information').bind('click', function() {
+	var win = window.open(profile_link, '_blank');
+	win.focus();
 })
 
 
@@ -20,6 +22,8 @@ $('#clearArchive').bind("click", function() {
 			location.reload();
 		})
 	}
+
+	return false;
 	
 });
 
@@ -36,10 +40,13 @@ $('#removeSelected').bind("click", function(){
 			removeLink(links);
 		}
 		else {
-			alert('Please select the content you want to remove.')
+
+			$('#error-alert-div').html('Please select the content you want to remove.').slideDown(300).delay(2000).slideUp(300);
 		}
 		
 	}
+
+	return false;
 	
 })
 
@@ -118,10 +125,18 @@ function loggedUser()
 	   		try
 			{
 				var result = JSON.parse(html.match(/{.*}/));
+
+				if (result == null) {
+					$('#content').html('<h4 style="text-align:center">Quora login is required to access the archive.</h4><h6 style="text-align:center">Cannot read property \'name\' of null</h6>');
+					throw 'API returns null exception';
+				}
+
 				user = result.name
+				profile_link = result.link;
 				return user;
 			}catch(ex)
 			{
+				clearInterval(intervalID);
 				console.log(ex);
 			}
 			},
@@ -129,7 +144,7 @@ function loggedUser()
 	 	{
 	 		clearInterval(intervalID);
 	 		console.log(jqXHR.error, textStatus, errorThrown)
-	 		$('#content').html('<h4>Error '+jqXHR.status+' ('+jqXHR.statusText+'). Please reload.</h4>')
+	 		$('#content').html('<h4 style="text-align:center">Error '+jqXHR.status+' ('+jqXHR.statusText+'). Please reload.</h4>')
 	 	},
 	 timeout: 15000
 	});
@@ -137,8 +152,9 @@ function loggedUser()
 
 
 // searches through the content div on the page
+// executes on 2 events: input -> when manually typing in the search box, and keyup -> when a displayed suggestion is selected.
 
-$('#search').bind("input", function() {
+$('#search').on('input keyup', function() {
 	
 	var searchKey = $('#search').val();			// search key in the text box
 	
@@ -254,7 +270,7 @@ $('#button-container').on("click", "a#import_archive_action", function() {
 		userDict[user] = userLinks;
 		
 		storage.set(userDict, function() {
-			alert(count+' answers imported');
+			alert(count+' answer(s) imported');
 			location.reload();
 		})
 		
@@ -333,13 +349,14 @@ $("#download_answers_offline").bind('click', function() {
 		var links = selectedLinks();
 
 		if (links.length == 0) {
-			alert("Select answers to download offline.");
+			$('#error-alert-div').html('Select answers to download offline.').slideDown(300).delay(2000).slideUp(300);
 			return false;
 		}
 
 		// A limit of 10 links that can be downloaded at a time is set. This is based on intuition rather than solid technical know-how. 
 		if (links.length > 10) {
-			alert('Only 10 answers at a time supported. Currently ' + links.length + ' answers selected.');
+			var msg = 'Only 10 answers at a time supported. Currently ' + links.length + ' answers selected.';
+			$('#error-alert-div').html(msg).slideDown(300).delay(2500).slideUp(300);
 			return false;
 		}
 
@@ -370,5 +387,18 @@ $("#download_answers_offline").bind('click', function() {
 
 $('#deselect_checkboxes').bind('click', function() {
 	$('input:checkbox').prop('checked', false);
+	return false;
+})
+
+
+
+/*  
+*
+* Purpose: Refresh the suggestions box to load new suggestions.
+*
+*/
+
+$('#recommendedContentRefresh').bind('click', function() {
+	populateSuggestionBoard();
 	return false;
 })
