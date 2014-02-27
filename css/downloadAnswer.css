@@ -1,9 +1,9 @@
 body {
-	margin-top: 40px;
-	margin-bottom: 40px;
-	color: black;
 
+	color: black;
+	font-size: 12px;
 	font-weight: normal;
+	padding-bottom: 40px
 }
 
 h1 {
@@ -17,8 +17,19 @@ h2 {
 	font-size: 1.3em;
 }
 
+.header {
+	padding-top: 40px;
+	background: #14232E;
+	padding-bottom: 25px;
+	color: #EBE3FF;
+}
+
 .answer_user {
 	font-weight: normal;
+}
+
+.answer_user > a{
+	color: #EBE3FF;
 }
 
 #answer_header {
@@ -26,7 +37,7 @@ h2 {
 }
 
 #answer_header > a {
-	color: black !important;
+	color: #EBE3FF !important;
 }
 
 .question_details_text  {
@@ -48,9 +59,37 @@ img {
 
 .link_text {
 	font-size: 20px;
+	color: #EBE3FF;
 	font-weight: normal;
 }
 
+a.question_link:hover {
+	text-decoration: none;
+}
+
 #answer_body {
-	margin-top: 25px;
+	margin-top: 40px;
+	line-height: 25px;
+}
+
+.question_link {
+	color: #EBE3FF;
+}
+
+.thumbnail {
+	width: 480px;
+	height: 360px;
+	cursor: pointer;
+}
+
+div.thumbnail:after {
+	content: " ";
+	background-color: transparent;
+	display: block;
+	height: 100%;
+	left: 0;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	background: url('../images/thumbnail-play.png') center center no-repeat;
 }

@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+    <link href="css/bootstrap.min.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="css/style.css" media="screen" rel="stylesheet" type="text/css" />
+    <script src="js/jquery.js" type="text/javascript"></script>  
+    <link rel="shortcut icon" href="icon/icon48.png" />
+    
+    <title>Manage Buckets - Quora Archive</title>
+  </head>
+  <body>
+
+        <div class="alert alert-error" id="error-alert-div"></div>
+        <div id="success-alert-div"></div>
+
+    <div class="row-fluid">
+    	<div class="span12 header">
+    		<a href="index.html"><img src="images/icon.jpg" style="width: 215px"></a></img>
+    	</div>
+    </div>
+
+
+    <div class="row-fluid">
+    	<div class="span10 offset1" style="margin-top:80px; margin-bottom:50px;">
+    		    
+    		    <div class="row-fluid">
+    		    	<div class="span6">
+                		<div><h3>Manage Buckets</h3></div>
+        		    </div>
+        		</div>
+
+                <br>
+
+                <div class="row-fluid">
+
+                	<div class="span12">
+
+                        <h4 style="font-weight: normal">Create a new Bucket</h4>
+
+                        <div class="input-append span8 offset2">
+                          <input class="span8" id="newBucketInput" type="text" autofocus="on">
+                          <button class="btn" id="addNewBucket" type="button">Add</button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <br><hr>
+
+                <div class="row-fluid">
+
+                    <div class="span12">
+
+                    <h4 style="font-weight: normal">Existing Buckets</h4>
+                    <div id="edit_bucket_help">Edit the bucket and press enter to bring the change in effect.</div>
+                    <div id="existing-buckets" class="span11">
+
+                    </div>
+
+                    </div>
+
+                </div>
+
+
+         	
+    	</div>
+    </div>
+  
+  </body>
+
+  <script src="js/manageBuckets.js" type="text/javascript"></script>
+  
+</html>

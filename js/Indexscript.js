@@ -6,13 +6,15 @@ var intervalID = window.setInterval(checkUserLoggedIn, 2000);
 
 // checkboxes at the side of each answer link are id'ed as chkbox<n>
 // this variable keeps a tab on the <n> part of the checkbox
-var checkBoxID = 1;
+var checkBoxID=1;
 
 // array to store the subjects of the archive contents. Used for suggestions
-var subjects = [];
+var subjects=[];
 
 // array of subjects with spaces.
-var global_subjects_space = [];
+var global_subjects_space=[];
+
+var global_buckets = [];
 
 
 /*
@@ -29,14 +31,103 @@ function checkUserLoggedIn(){
 	else {
 		// clears the windows.setInterval
 		clearInterval(intervalID);
-		
+
+
+
+		// Migrate archive to new data format.
+		var data_key = user + ":Setting";
+
+		storage.get(data_key, function(items) {
+			var data_version = items[data_key];
+
+			if (typeof data_version == 'undefined' || data_version["data_version"] != "v2") {
+				migrateArchiveData(user);
+				return -1;
+			}
+
+		})
+
+
+
+		populateBuckets();
+		populateClassifyAnswersMenu();
 		populateArchiveStatus();		// populates the archive status div.
 		populateUserInformation();
 		
 		$('#content').html('');
-		contentPopulate();
+		contentPopulate('all');
 	}
 }
+
+
+
+
+/*
+ * PURPOSE - populates the buckets
+ * INPUT - none
+ * OUTPUT - none
+ */
+
+function populateBuckets() {
+
+	// initializes the tags ul with a heading Buckets and a default option of Show all
+	$('ul.tags').html('<li class="heading">Buckets: </li><li class="tag">Show All</li>');
+
+	// construct the key
+	var bucketsLabel = user + ":Buckets";
+  	
+  	storage.get(bucketsLabel, function(items) {
+
+  		var buckets = items[bucketsLabel];
+
+  		if (typeof buckets == 'undefined')		// no buckets.
+  			return ;
+
+  		buckets = buckets.split(";");
+  		global_buckets = buckets;
+  		populateClassifyAnswersMenu();
+
+  		for (var i=0; i <buckets.length; i++) {
+
+  			if (buckets[i] == '')
+  				continue;
+
+  			var bucket_div_html = '<li class="tag">'+buckets[i]+'</li>';
+
+  			$('ul.tags').append(bucket_div_html);
+
+  		}
+
+  		var temp = '<li class="tag">Unclassified</li>';
+  		$('ul.tags').append(temp);
+
+  	});
+
+}
+
+
+/*
+ * PURPOSE - populates the buckets in the classify answers menu
+ * INPUT - none
+ * OUTPUT - none
+ */
+
+function populateClassifyAnswersMenu () {
+
+	$('#classifyMenu').html('');
+	var temp_html;
+
+	for (var i=0; i<global_buckets.length; i++) {
+		if (global_buckets[i] == '')
+			continue;
+
+		temp_html = '<option>'+global_buckets[i]+'</option>';
+
+		$('#answerBucketDD').append(temp_html);
+	}
+
+}
+
 
 
 /*
@@ -52,6 +143,7 @@ function populateUserInformation() {
 
 	$('#userProfilePic').load(img_url);
 }
+
 
 
 /*
@@ -80,7 +172,7 @@ function isValidLink (link) {
 	if (link.charAt(0) != '/')
 		return false;
 
-	if (link.match(/[^\w+/-]/) != null)
+	if (link.match(/[^\w+\\./-]/) != null)
 		return false 
 	
 	try {
@@ -130,45 +222,58 @@ function extractLinkProperties(link) {
 		if (len-4>=0 && linkSplit[len-4] != "")		// i.e. there is a primary topic attached
 			questionTag = linkSplit[len-4];
 		
-		var questionArray = [questionTag, questionText, linkType, personName]
+		var questionArray = [questionTag, questionText, linkType, personName];
 		return questionArray
 }
 
 
 /*
  * PURPOSE - Populates the archive contents on the index page
- * INPUT - none
+ * INPUT - bucket (content tagged to passed bucket will be displayed)
  * OUTPUT - none
  * The function internally calls displayLink for every link in the archive.
  */
 
-function contentPopulate() {
+function contentPopulate(bucket) {
 	
-	var userLinks;
+	var userLinks, tempAnswerLink, tempAnswerBucket;
 	
+	checkBoxID = 1;
+	global_subjects_space = [];
+	subjects = [];
+
+	$('#content').html('');
+
 	storage.get(user, function(items) {
   		userLinks = items[user];
   		
   		if (typeof userLinks == 'undefined') {
   			$('#content').append('<div style="text-align:center; margin-top: 50px;"><h1>No archived answers :(</h1><br />Need help? Visit <a href="https://sites.google.com/site/quoraarchive/" target="_blank">Quora Archive</a></div>')
   		}
-
-		userLinks = userLinks.split(';');
   		
-  		for (var i=0; i<userLinks.length; i++) {
+  		for (var i in userLinks) {
   			
-  			if (isValidLink(userLinks[i])){
+  			if (isValidLink(i)){
+
+  				tempAnswerLink = i;
+  				tempAnswerBucket = userLinks[tempAnswerLink]["bucket"];
+
+  				// skips answers that do not match the specified bucket 
+  				if (bucket.toLowerCase() != "all" && tempAnswerBucket.toLowerCase() != bucket.toLowerCase())
+  					continue;
   				
-  				if ( userLinks[i].match(/(http|https):\/\/[\w\-+]+\.quora\.com\/[\w\-+]+/i) != null || userLinks[i].indexOf('answer') == -1)		// if the link is that of a post
-  					displayBlogLink(userLinks[i])
+  				if (tempAnswerLink.match(/(http|https):\/\/[\w\-+]+\.quora\.com\/[\w\-+]+/i) != null || tempAnswerLink.indexOf('answer') == -1)		// if the link is that of a post
+  					displayBlogLink(tempAnswerLink);
   				else
-  					displayAnswerLink(userLinks[i])
+  					displayAnswerLink(tempAnswerLink);
   			}
   		}
   		
   		populateSuggestionBoard();
+  		initializeSystem();
 	
 	})
+
 }
 
 
@@ -179,21 +284,23 @@ function contentPopulate() {
  */
 
 function displayAnswerLink(link) {
-	
+
 	var linkProp = extractLinkProperties(link);
-	
+
 	var chkboxValue = link;
-	
+
 	var subject = linkProp[0];
 	var subjectHREF = 'http://www.quora.com/' + subject;	// link to the primary topic page
 	var subject_space = subject.replace(/-/g, ' ');
-	
+	// removes the extra digit at the end of subject. Ex: Python 1 -> Python
+	subject_space = subject_space.replace(/[ \d]$/g, '');
+
 	var display = linkProp[3] + "'s " + linkProp[2].replace(/-/g, ' ') + ' to <strong>' + linkProp[1].replace(/-/g, ' ')+'</strong>';
-	
+
 	link = 'http://www.quora.com' + link;
-	
+
 	var div = $('body').find('#' + subject);
-	
+
 	var html = "";
 
 
@@ -201,34 +308,33 @@ function displayAnswerLink(link) {
 
 	var answer_link_content_html = '<div class="span11 answer_link"><input type="checkbox" style="margin-right:10px;" id="chkbox'+checkBoxID+'" value="'+chkboxValue+'"><a href="'+link+'" target="_blank">'+display+'  <span class="hidden_topic">'+subject_space + '</a></span></div>';
 
-	
-	if (div.length == 0) {		// if no div for the topic exists
-		
-		subjects.push(subject);
-		
-		global_subjects_space.push(subject_space);
 
+	if (div.length == 0) {		// if no div for the topic exists
+
+		subjects.push(subject);
+
+		global_subjects_space.push(subject_space);
 
 		html = '<div class="row-fluid"  id="'+subject+'">' +
 					 subject_header_link +
 					 answer_link_content_html +
 				'</div>'
-		
+
 		checkBoxID += 1;
-		
+
 		$('#content').prepend(html);
-		
+
 	}
-	
+
 	else {	// append to the existing topic div
-		
+
 		html = answer_link_content_html;
 		checkBoxID += 1;
-		
+
 		$('#'+subject).append(html)
 	}
-	
-	
+
+
 }
 
 
@@ -238,18 +344,17 @@ function displayAnswerLink(link) {
  * OUTPUT - none
  */
 
-
 function displayBlogLink(link) {
-	
+
 	var linkDisplay = link.substring(link.lastIndexOf('/')+1)
 	linkDisplay = linkDisplay.replace(/-/g, ' ')
-	
+
 	var chkboxValue = link;
-	
+
 	var subject = "Blogs-and-Posts";
 
 	var subject_space = subject.replace(/-/g, ' ');
-	
+
 	var display = '<strong>'+linkDisplay+'</strong>';
 
 
@@ -258,38 +363,38 @@ function displayBlogLink(link) {
 	// 2. /Michael-Thomas-37/Posts/The-Paradox-of-Productivity
 	This is to add domain name to the 2nd category links
 	*/
-	
+
 	if (link.charAt(0) == '/')
 		link = 'http://www.quora.com' + link;
-	
+
 	var div = $('body').find('#' + subject);
-	
+
 	var html = "";
-	
+
 	if (div.length == 0) {		// if no div for the topic exists
 
 		global_subjects_space.push(subject_space);
-		
+
 		html = '<div class="row-fluid"  id="'+subject+'">' +
 					'<div class="span12 subject_header">'+subject_space+'</div>' +
 					'<div class="span12 answer_link"><input type="checkbox" style="margin-right:10px;" id="chkbox'+checkBoxID+'" value="'+chkboxValue+'"><a href="'+link+'" target="_blank">'+display+'  <span class="hidden_topic">'+subject_space + '</a></span></div>'+
 				'</div>'
-		
+
 		checkBoxID += 1;
-		
+
 		$('#content').prepend(html);
-		
+
 	}
-	
+
 	else {	// append to the existing topic div
-		
+
 		html = '<div class="span12 answer_link"><input type="checkbox" style="margin-right:10px;" id="chkbox'+checkBoxID+'" value="'+chkboxValue+'"><a href="'+link+'" target="_blank">'+display+'  <span class="hidden_topic">'+subject_space + '</a></span></div>';
 		checkBoxID += 1;
-		
+
 		$('#'+subject).append(html)
 	}
-	
-	
+
+
 }
 
 
@@ -330,9 +435,9 @@ function populateArchiveStatus() {
 		freeSpace = (freeSpace).toPrecision(3) + 'bytes';
 	}
 	
-	$('#totalSpace').html('Available space: '+totalSpace);
-	$('#usedSpace').html('Used Space: '+usedSpace);
-	$('#availableSpace').html('Free space: '+freeSpace)
+	$('#totalSpace').html(totalSpace);
+	$('#usedSpace').html(usedSpace);
+	$('#availableSpace').html(freeSpace)
 	
 	});
 }
@@ -387,13 +492,16 @@ function populateSuggestionBoard() {
 
 
 /*
- * PURPOSE - Attaches the autocomplete feature on the search textbox. Autocomplete feature used from JQuery UI.
+ * PURPOSE - Performes multiple, small independent tasks (well! as of now it does only one) such as attaching the autocomplete feature on the search textbox.
  * INPUT - none
  * OUTPUT - none
  */
 
-$(function() {
+function initializeSystem() {
+
+
 	$( "#search" ).autocomplete({
 		source: global_subjects_space
 	});
-});
+
+}

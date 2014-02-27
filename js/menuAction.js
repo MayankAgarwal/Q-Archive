@@ -6,10 +6,12 @@ var user, profile_link;
 loggedUser();
 
 
+// PURPOSE: opens the logged-in user's Quora profile page
 $('#user-information').bind('click', function() {
 	var win = window.open(profile_link, '_blank');
 	win.focus();
 })
+
 
 
 // Clears the archive of the current user.
@@ -18,8 +20,9 @@ $('#clearArchive').bind("click", function() {
 	
 	if (confirm("This will clear all your archived answers. Press Ok to continue.")) {
 		
+		// remove the link storage
 		storage.remove (user, function() {
-			location.reload();
+				location.reload();
 		})
 	}
 
@@ -92,8 +95,7 @@ function removeLink(links) {
 		var userLinks = items[user];
 		
 		for (var i=0; i<links.length; i++) {
-			userLinks = userLinks.replace(links[i], '');		//	removes the link from the archive
-			userLinks = userLinks.replace(/;;/g, ';');			//	replaces ;; created because of removal of links to ;
+			delete userLinks[links[i]];
 		}
 		
 		var userDict = {}		// var created to be able to push the new archive into chrome storage.
@@ -113,7 +115,6 @@ function removeLink(links) {
 
 function loggedUser()
 {
-
 	url = "http://api.quora.com/api/logged_in_user";
 	
 	$.ajax({
@@ -132,6 +133,10 @@ function loggedUser()
 				}
 
 				user = result.name
+
+				// set the current user in sessionStorage. Used by manage buckets js file.
+				sessionStorage['loggedUser'] = user;
+
 				profile_link = result.link;
 				return user;
 			}catch(ex)
@@ -199,6 +204,7 @@ $('#search').on('input keyup', function() {
 })
 
 
+// on clicking Export Archive button, displays a modal box with a stringified version of the archive contents
 
 $('#exportArchive').bind("click", function() {
 	
@@ -206,21 +212,40 @@ $('#exportArchive').bind("click", function() {
 	
 	storage.get(user, function(items){
 		var userLinks = items[user];
+		var strUserLinks = JSON.stringify(userLinks);
 		
 		// fill the div with the user links
-		$('#export_import_archive_contents').html('<div style="max-height: 250px; overflow: scroll; padding:5px; font-size:11px;" id="userLinks">'+userLinks+'</div>');
+		$('#export_import_archive_contents').html('<div style="max-height: 250px; overflow: scroll; padding:5px; font-size:11px;" id="userLinks">'+strUserLinks+'</div>');
 		
-		// body text with a link to the clippy module to enable 'Copy to Clipboard' feature.
-		$('#body-text').html('Copy and paste the following into a text file: <span class="clippy" style="margin-left:15px;">'+userLinks+'</span>')
+		// body a 'copy to clipboard' and 'download archive' feature.
+		$('#body-text').html('<span class="modal-body-header">Copy contents: </span><span class="clippy" style="margin-left:15px;">'+strUserLinks+'</span><span class="modal-body-header">Download backup: </span><i id="download-archive-backup" class="icon-download-alt" style="cursor: pointer"></i>')
 		
 		// display Clippy icon linked to the app. item.
 		$('.clippy').clippy({width: "120"});
+
 	});
 	
 	$('#archive_export_import_modal').modal();		// show the modal box
+
+	return false;
 })
 
 
+// PURPOSE: download the archive backup as a text file on clicking the download archive link on Export Archive modal box
+$("body").on("click", "#download-archive-backup", function downloadArchiveTextFile() {
+
+	var strUserLinks = $("#userLinks").text();
+
+	var filename = user + "-Quora Archive Backup [" + new Date().toLocaleDateString() + "].txt"
+
+	var blob = new Blob([strUserLinks], {type:"text/plain;charset=utf-8"});
+	saveAs(blob, filename);
+
+});
+
+
+
+// shows the import archive modal box on clicking the Import Archive button.
 $('#importArchive').bind("click", function() {
 	
 	$('#export_import_archive_header').html('<h4>Import Archive</h4>')			// add appropriate header to the modal box.
@@ -235,7 +260,10 @@ $('#importArchive').bind("click", function() {
 	
 	// show the modal box.
 	$('#archive_export_import_modal').modal();
+
+	return false;
 })
+
 
 
 /* Triggers when clicked on the import button in the modal box
@@ -246,33 +274,50 @@ $('#importArchive').bind("click", function() {
 
 $('#button-container').on("click", "a#import_archive_action", function() {
 	var input = $('#import_archive_content').val();
-	var count = 0;		// keeps a count of the total number of answers imported
-	inputSplit = input.split(';')
+	var imported_count = 0;		// keeps a count of the total number of answers imported
+	var existing_count = 0;		// keeps a count of answers that exist in the archive
 	
 	storage.get(user, function(items) {
 		var userLinks = items[user];
 		
 		// if no links present in the archive, then start new.
 		if (typeof userLinks == 'undefined')
-			userLinks = "";
+			userLinks = {};
+
+		try {
+
+			var import_links = JSON.parse(input);
 		
-		for (var i=0; i<inputSplit.length; i++) {
-			
-			// check if each link is valid and is not already present in the archive
-			if (isValidLink(inputSplit[i]) & userLinks.indexOf(inputSplit[i]) == -1) {
-				userLinks = userLinks + ';' + inputSplit[i];
-				count++;
+			for (var i in import_links) {
+				
+				// check if each link is valid and is not already present in the archive
+				if (isValidLink(i)) {
+
+					if (i in userLinks == false) {
+						userLinks[i] = import_links[i];
+						imported_count++;
+					}
+
+					else {
+						existing_count++;
+					}
+
+				}
+				
 			}
 			
+			var userDict = {};		// variable used to be able to use the chrome storage API
+			userDict[user] = userLinks;
+			
+			storage.set(userDict, function() {
+				alert(imported_count+' answer(s) imported.\n'+existing_count+" answer(s) already exist.");
+				location.reload();
+			})
 		}
-		
-		var userDict = {};		// variable used to be able to use the chrome storage API
-		userDict[user] = userLinks;
-		
-		storage.set(userDict, function() {
-			alert(count+' answer(s) imported');
-			location.reload();
-		})
+		catch (err) {
+			console.log("Error encountered while importing archives. \n Error: "+err.message);
+			alert("Import function failed. Check console for a detailed output (Press Ctrl+Shift+J)")
+		}
 		
 	})
 });
@@ -293,17 +338,19 @@ $('#surpriseMe').bind("click", function() {
 	storage.get(user, function (items) {
 		var userLinks = items[user];
 
-		userLinks = userLinks.split(";")
+		// number of archived answers in the archive
+		var length = Object.keys(userLinks).length;
 
-		var randPos = Math.floor((Math.random()*userLinks.length)+1);
+		var randPos = Math.floor((Math.random()*length)+1);
+		var chosenURL = Object.keys(userLinks)[randPos];
 
-		if (isValidLink(userLinks[randPos])) {
-			var chosenURL = userLinks[randPos];
+		if (isValidLink(chosenURL)) {
 
 			// if the chosen URL is that of an answer (answer URLs start with '/'), then append http://www.quora.com to it.
 
 			if (chosenURL.charAt(0) == '/') {
 				chosenURL = "http://www.quora.com"+chosenURL;
+				
 			}
 
 			var win = window.open(chosenURL, "_blank")
@@ -353,22 +400,27 @@ $("#download_answers_offline").bind('click', function() {
 			return false;
 		}
 
-		// A limit of 10 links that can be downloaded at a time is set. This is based on intuition rather than solid technical know-how. 
-		if (links.length > 10) {
-			var msg = 'Only 10 answers at a time supported. Currently ' + links.length + ' answers selected.';
+		// A limit of 15 links that can be downloaded at a time is set. This is based on intuition rather than solid technical know-how. 
+		if (links.length > 15) {
+			var msg = 'Only 15 answers at a time supported. Currently ' + links.length + ' answers selected.';
 			$('#error-alert-div').html(msg).slideDown(300).delay(2500).slideUp(300);
 			return false;
 		}
 
 		for (var i=0; i<links.length; i++) {
+
+			var URL = links[i];
+
+			if (links[i].charAt(0) == '/')
+				URL = "http://www.quora.com" + links[i];
 			
-			// Skip if a blog link is chosen.
+			var url = chrome.extension.getURL("download.html") + "?url=" + encodeURIComponent(URL);
 
-			if (links[i].charAt(0)!='/')
-				continue;
-
-			var answerURL = "http://www.quora.com" + links[i];
-			var url = chrome.extension.getURL("download.html") + "?url=" + encodeURIComponent(answerURL);
+			// if the link is that of a blog, pass an extra parameter indicating that the link is a blog
+			if (links[i].charAt(0) != '/' || links[i].toLowerCase().indexOf("answer") == -1)
+				url = url + "&isBlog=true";
+			else
+				url = url + "&isBlog=false";
 
 			var win = window.open(url, "_blank");
 
@@ -401,4 +453,87 @@ $('#deselect_checkboxes').bind('click', function() {
 $('#recommendedContentRefresh').bind('click', function() {
 	populateSuggestionBoard();
 	return false;
+})
+
+
+
+/*
+* PURPOSE: Filter and display content belonging to the clicked bucket
+*
+* INPUT: None. Triggers on clicking a .tag li element
+* OUTPUT: None. Calls contentPopulate function with suitable parameter
+*
+*/
+
+$('body').on('click', 'li.tag', function() {
+	var bucket = $(this).text();
+
+	if (bucket.toLowerCase() === 'show all') 
+		bucket = 'all';
+
+	if (bucket.toLowerCase() === 'unclassified')
+		bucket = '';
+
+	$('div#content').html('<div style="text-align:center; margin-top:40px;"><div><img src="images/loader.GIF" /></div><br><div>Loading</div></div>')
+
+	contentPopulate(bucket);
+
+})
+
+
+
+// displays the classify answer option dropdown
+$('#reassignAnswer').bind('click', function() {
+	$('#classifyAnswerOptions').slideDown(300);
+	return false;
+})
+
+// closes the classify answer dropdown
+$('#closeClassifyDD').bind('click', function() {
+	$('#classifyAnswerOptions').slideUp(300);
+	return false;
+})
+
+
+/*
+*
+* PURPOSE: Classifies answers based on the bucket selected in the dropdown
+*
+*/
+
+$('#classifyAnswers').bind('click', function() {
+
+	var links = selectedLinks();
+
+	// bucket selected in the dropdown
+	var bucket = $('#answerBucketDD').val();
+
+	storage.get(user, function(items) {
+		var userLinks = items[user];
+
+		// update bucket entry for the selected links
+		for (var i in links) {
+			userLinks[links[i]]["bucket"] = bucket;
+		}
+
+		var userDict = {};
+		userDict[user] = userLinks;
+
+		storage.set(userDict, function() {
+
+			$('#search').val('');
+
+			$('#classifyAnswerOptions').slideUp(300);
+
+			$('#success-alert-div').html('Answers successfully classified');
+
+			$('#success-alert-div').slideDown(300).delay(1500).slideUp(300);
+
+			contentPopulate(bucket);
+
+		})
+
+
+	})
+
 })

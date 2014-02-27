@@ -89,6 +89,7 @@
 	height: 100%;
 }
 .ui-autocomplete {
+	z-index: 110;
 	position: absolute;
 	top: 0;
 	left: 0;

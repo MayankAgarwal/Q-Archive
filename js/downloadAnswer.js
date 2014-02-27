@@ -20,13 +20,15 @@ function getURL() {
 	// filters out the GET parameter portion from the URL
 
 	var param = window.location.search.replace("?", "")
+	param = param.split("&");
 
-	var url = param.split("=")[1];
+	var url = param[0].split("=")[1];
+	var isBlog = param[1].split("=")[1];
 
 	url = decodeURIComponent(url);
 
 
-	loadContent(url);
+	loadContent(url, isBlog);
 
 }
 
@@ -37,14 +39,22 @@ function getURL() {
  * OUTPUT - None. Calls other functions to load the header and the body of the question.
  */
 
-function loadContent(url) {
+function loadContent(url, isBlog) {
 
-	var answer_header_url = url + " div.question_text:first";
+	var header_url, body_url;
 
-	var answer_body_url = url + " div.answer_content:first";
+	if (isBlog === "true") {
+		header_url = url + " h1.board_item_title";
+		body_url = url + " div.board_item_description:first";
+	}
 
-	loadAnswerHeader(answer_header_url);
-	loadAnswerBody(answer_body_url);
+	else {
+		header_url = url + " div.question_text:first";
+		body_url = url + " div.answer_content:first";
+	}
+
+	loadAnswerHeader(header_url, isBlog);
+	loadAnswerBody(body_url);
 
 }
 
@@ -55,15 +65,22 @@ function loadContent(url) {
  * OUTPUT - Loads the header received from the URL into div#answer_header
  */
 
-function loadAnswerHeader(url) {
+function loadAnswerHeader(url, isBlog) {
 
 	$("#answer_header").load(url, function(response, status, xhr) {
 		
 		if (status == 'success') {
 			header_loaded = true;	// indicate that the header has been successfully loaded.
 
-			// Prepare the filename as "Leonard Kim's answer to - Business- How do you create a business plan.mhtml"
-			fileName = $(".answer_user").text() + " " + $(".link_text").text() + ".mhtml";
+
+			if (isBlog === "true") {
+				fileName = $('h1.board_item_title').text() + ".mhtml";
+			}
+			else {
+				// Prepare the filename as "Leonard Kim's answer to - Business- How do you create a business plan.mhtml"
+				fileName = $(".answer_user").text() + " " + $(".link_text").text() + ".mhtml";
+			}
+
 		}
 		else {
 			// if load fails, display the status on the page
@@ -141,3 +158,18 @@ function saveAnswer() {
 
 	})
 }
+
+
+/*
+*
+* PURPOSE: embeds youtube videos on clicking their thumbnails 
+*
+*/ 
+
+$("body").on("click", "div.qtext_embed", function() {
+
+	var data_embed = $(this).attr("data-embed");
+	console.log(data_embed);
+	$(this).html(data_embed);
+
+})
