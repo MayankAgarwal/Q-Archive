@@ -169,7 +169,6 @@ function saveAnswer() {
 $("body").on("click", "div.qtext_embed", function() {
 
 	var data_embed = $(this).attr("data-embed");
-	console.log(data_embed);
 	$(this).html(data_embed);
 
 })

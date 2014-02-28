@@ -17,7 +17,7 @@ function migrateArchiveData (user) {
 
 		// if archive is empty
 		if (typeof data == 'undefined') {
-			alert('No data to migrate.');
+			console.log('No data to migrate.');
 			return -1;
 		}
 

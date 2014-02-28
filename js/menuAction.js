@@ -537,3 +537,64 @@ $('#classifyAnswers').bind('click', function() {
 	})
 
 })
+
+// fires on clicking one of the sort archive option
+
+$('span.sort-option').bind('click', function() {
+	var sort_type = $(this).text();
+
+	if (sort_type.toLowerCase() === "ascending")
+		sortArchive(1);
+	else if(sort_type.toLowerCase() === "descending")
+		sortArchive(2);
+	else if(sort_type.toLowerCase() === "random")
+		sortArchive(3);
+
+})
+
+
+/*
+* PURPOSE: gets the subject headers in the content div -> sorts them as per the parameter passed and then displays it on the screen
+* INPUT: sort_type 	= 1 if ascending
+*				   	= 2 if descending
+*					= 3 if random
+*/
+
+function sortArchive(sort_type) {
+
+	// gets the div enclosing content belonging to a particular subject
+	var content_arr = $('div.subject_header').parent();
+
+	if (content_arr.length == 0)
+		return;
+
+	content_arr.sort(function(a,b) {
+		var a_id = $(a).attr('id');
+		var b_id = $(b).attr('id');
+
+		// 1 = ascending sort
+		if (sort_type === 1) {
+			if (a_id > b_id)
+				return 1;
+			return -1;
+		}
+
+		// 2 = descending sort
+		else if (sort_type === 2) {
+			if (a_id > b_id)
+				return -1;
+			return 1;
+		}
+
+		// 3 = random sort
+		else if (sort_type === 3) {
+			var rand_number = Math.floor(Math.random()*2 - 1);
+			return rand_number;
+		}
+
+	})
+
+
+	$('#content').html(content_arr);
+
+}
