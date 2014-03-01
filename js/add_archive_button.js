@@ -132,6 +132,17 @@ function addLink(element, link) {
   			return;
   		}
 
+  		// for new installations, initalize userLinks variable as an object and set the system_setting parameter
+  		if (typeof userLinks == 'undefined') {
+  			userLinks = {};
+
+  			var userSetting_label = user + ":Setting";
+			var system_setting = {};
+			system_setting[userSetting_label] = {"data_version": "v2"};
+
+  			storage.set(system_setting);
+  		}
+
   		
   		userLinks[link] = {"bucket": ""};		// add a new entry to existing links. Key= link, Value: Bucket
   		
