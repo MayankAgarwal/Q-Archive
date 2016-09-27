@@ -1,4 +1,4 @@
-> **Note:**  This extension was taken off Chrome Webstore after a complain by one of Quora's manager. The objection was regarding the usage of a registered word "quora." Repeated attempts to reinstate it were not responded to. Hence, I have decided to close the project for good.
+> **Note:**  This extension was taken off Chrome Webstore after a complain by Quora. The objection was regarding the usage of a registered word "quora." Repeated attempts to reinstate it were not responded to. Hence, I have decided to close the project for good.
 <br /><br />
 Links to the webstore will result in "Item not found" error and the extension will not work on the new UI as the DOM structure has changed. However on the upside, Quora has officially launched the 'Reading List' feature so you can use it instead.
 <br /><br />
